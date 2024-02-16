@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 interface FileCardProps {
   file: any;
   // onImageClick: (e: number) => void;
@@ -21,14 +23,16 @@ FileCardProps) {
       // onClick={() => onClick?.(id?.toString() ?? '')}
     >
       <div className="flex-none w-28  rounded-tl-xl rounded-bl-xl">
-        <img
-          src={displayUrl}
-          // src="https://mblogthumb-phinf.pstatic.net/MjAxOTA5MDlfMjM2/MDAxNTY4MDExNjU0NDcw.jdtDVxiHtslkLsi9D3XH5Cl1--yVYev8ZijHLhSinnIg.N_2eE5Ceb14CkurPa33rB8C5n0HKKNDhGeyt1WCRPIEg.PNG.cpasun/SE-2aa2e66a-f929-436e-a13e-9e8c5c4386cf.png?type=w800"
-          alt={originalName}
-          className="object-cover w-24 h-24 hover:scale-110 transition-transform ease-in-out duration-500"
-          // onClick={() => onImageClick(id!)}
-          id={String(file.id)}
-        />
+        <Link href={`/preview/${id}`}>
+          <img
+            src={displayUrl}
+            // src="https://mblogthumb-phinf.pstatic.net/MjAxOTA5MDlfMjM2/MDAxNTY4MDExNjU0NDcw.jdtDVxiHtslkLsi9D3XH5Cl1--yVYev8ZijHLhSinnIg.N_2eE5Ceb14CkurPa33rB8C5n0HKKNDhGeyt1WCRPIEg.PNG.cpasun/SE-2aa2e66a-f929-436e-a13e-9e8c5c4386cf.png?type=w800"
+            alt={originalName}
+            className="object-cover w-24 h-24 hover:scale-110 transition-transform ease-in-out duration-500"
+            // onClick={() => onImageClick(id!)}
+            id={String(file.id)}
+          />
+        </Link>
       </div>
       <div className="my-2">
         <div className="flex items-center p-2 bg-gray-100 rounded-xl text-gray-600">
