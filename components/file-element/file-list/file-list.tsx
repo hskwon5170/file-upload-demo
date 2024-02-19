@@ -1,5 +1,5 @@
 import { useState } from "react";
-import FileCard from "./fileCard";
+import FileCard from "./file-card";
 
 export default function FileList({ files }: { files: any[] }) {
   //   const [changeView, setChangeView] = useState<boolean>(false);

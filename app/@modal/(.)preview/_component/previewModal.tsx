@@ -1,6 +1,6 @@
 "use client";
 
-import BackButton from "@/components/backButton";
+import BackButton from "@/components/back-button/backButton";
 import { useEffect } from "react";
 import styles from "./page.module.css";
 
@@ -42,19 +42,21 @@ export default function PreviewModal({ data }: Root) {
   const { originalName, displayUrl } = data;
 
   return (
-    <div className="bg-black bg-opacity-80 fixed z-10 left-0 top-0 w-screen h-screen flex justify-center">
-      <div className="relative top-10 ">
-        <div className="flex w-full justify-between items-center mb-6">
-          <BackButton />
-          <div className="text-gray-200 text-lg">{originalName}</div>
-          <div className="text-white">다운로드</div>
-        </div>
-        <div
-          className={`${styles["image-zone"]} flex flex-col items-center max-h-[80vh] overflow-y-auto pr-6`}
-        >
-          <img className="w-[600px] h-[600px]" src={displayUrl} />
+    <>
+      <div className="bg-black bg-opacity-80 fixed z-10 left-0 top-0 w-screen h-screen flex justify-center">
+        <div className="relative top-10 ">
+          <div className="flex w-full justify-between items-center mb-6">
+            <BackButton />
+            <div className="text-gray-200 text-lg">{originalName}</div>
+            <div className="text-white">다운로드</div>
+          </div>
+          <div
+            className={`${styles["image-zone"]} flex flex-col items-center max-h-[80vh] overflow-y-auto pr-6`}
+          >
+            <img className="w-[600px] h-[600px]" src={displayUrl} />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -1,4 +1,4 @@
-import FileInfo from "@/components/fileInfo";
+import FileInfo from "@/components/file-element/file-info";
 
 export default function FileDetailPage() {
   return (
