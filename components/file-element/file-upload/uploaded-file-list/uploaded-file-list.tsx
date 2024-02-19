@@ -1,20 +1,18 @@
 "use client";
 import { fileAtom } from "@/atom/files";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue } from "jotai";
 import FileCards from "../../file-card/file-card";
 import { useMemo } from "react";
 
 export default function UploadedFileList() {
   const files = useAtomValue(fileAtom);
   // const [_, removeFile] = useAtom(removeFileAtom);
-
+  console.log("files입니다", files);
   const uploadedSuccessFiles = useMemo(() => {
-    return files.filter((file) => file.progress === 100);
+    return files.filter((file) => file?.progress === 100);
   }, [files]);
 
   if (!files || files.length === 0) return null;
-
-  console.log("uploadedSuccessFiles", uploadedSuccessFiles);
 
   return (
     <div
@@ -27,10 +25,8 @@ export default function UploadedFileList() {
         </span>{" "}
         / {files.length}개 <span className="font-extrabold">완료</span>
       </section>
-      {/* <section className="py-3">
-        <div className="w-[300px] h-[5px] rounded-md bg-blue-600" />
-      </section> */}
-      <section className=" w-full">
+
+      <section className="w-full">
         {files.map((file, idx: any) => (
           <div key={idx}>
             <FileCards file={file} />

@@ -12,6 +12,7 @@ type FileWithProgress = {
   progress?: number;
   status: "uploading" | "done";
   id: number;
+  isError?: boolean;
 };
 
 export default function FileDropZone() {
@@ -33,6 +34,7 @@ export default function FileDropZone() {
       progress: 0,
       status: "uploading",
       id: timestamp + idx,
+      isError: false,
     }));
 
     setFiles((prev) => [...prev, ...uploadedFiles]);
@@ -42,26 +44,22 @@ export default function FileDropZone() {
       formData.append("file", fileWithStatus.file);
 
       try {
-        const response = await axios.post(
-          "http://10.1.1.190:8084/api/files/upload",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-            onUploadProgress: (e) => {
-              const percentCompleted = Math.round((e.loaded * 100) / e.total!);
-              setFiles((prev) => {
-                return prev.map((file) => {
-                  if (file.id === fileWithStatus.id) {
-                    return { ...file, progress: percentCompleted };
-                  }
-                  return file;
-                });
+        await axios.post("http://10.1.1.190:8084/api/files/upload", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (e) => {
+            const percentCompleted = Math.round((e.loaded * 100) / e.total!);
+            setFiles((prev) => {
+              return prev.map((file) => {
+                if (file.id === fileWithStatus.id) {
+                  return { ...file, progress: percentCompleted };
+                }
+                return file;
               });
-            },
-          }
-        );
+            });
+          },
+        });
 
         setFiles((prev) =>
           prev.map((file) =>
@@ -72,7 +70,16 @@ export default function FileDropZone() {
         );
         // console.log("업로드 성공", response);
       } catch (error) {
-        console.error(error);
+        // console.error("error입니다", error);
+        setFiles((prev) => {
+          return prev.map((file) => {
+            if (file.id === fileWithStatus.id) {
+              return { ...file, status: "error", progress: 0, isError: true };
+            } else {
+              return file;
+            }
+          });
+        });
       }
     });
   };

@@ -47,7 +47,9 @@ export default function PreviewModal({ data }: Root) {
         <div className="relative top-10 ">
           <div className="flex w-full justify-between items-center mb-6">
             <BackButton />
-            <div className="text-gray-200 text-lg">{originalName}</div>
+            <div className="text-gray-200 text-lg max-w-[350px] truncate">
+              {originalName}
+            </div>
             <div className="text-white">다운로드</div>
           </div>
           <div

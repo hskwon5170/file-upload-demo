@@ -1,16 +1,20 @@
 type Props = {
   progress?: number;
+  isError?: boolean;
 };
-export default function ProgressBar({ progress }: Props) {
+export default function ProgressBar({ progress, isError }: Props) {
   return (
-    // <section className="py-3">
-    //   <div className="w-[300px] h-[5px] rounded-md bg-blue-600" />
-    // </section>
-    <div className="w-[300px] h-2 bg-blue-200 rounded-full">
-      <div
-        style={{ width: `${progress}%` }}
-        className="h-full text-center text-xs text-white bg-blue-600 rounded-full transition-all duration-700 ease-in-out"
-      ></div>
+    <div
+      className={`w-[300px] h-2  rounded-full ${
+        isError ? "bg-red-200" : "bg-blue-200"
+      }`}
+    >
+      {!isError && (
+        <div
+          style={{ width: `${progress}%` }}
+          className="h-full text-center text-xs text-white bg-blue-600 rounded-full transition-all duration-700 ease-in-out"
+        />
+      )}
     </div>
   );
 }

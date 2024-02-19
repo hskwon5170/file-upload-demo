@@ -5,6 +5,7 @@ type FileWithProgress = {
   progress?: number;
   status: "uploading" | "done";
   id: number;
+  isError?: boolean;
 };
 
 type ProgressAtomProps = {
