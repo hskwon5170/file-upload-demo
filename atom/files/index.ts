@@ -24,3 +24,5 @@ export const progressAtom = atom<ProgressAtomProps[]>([]);
 //     files.filter((f) => f.name !== file.name)
 //   );
 // });
+
+export const minimizeFileListAtom = atom(false);
