@@ -3,6 +3,7 @@ import { fileAtom } from "@/atom/files";
 import { useAtom } from "jotai";
 import { useRef, useState } from "react";
 import { TfiUpload } from "react-icons/tfi";
+import { IoMdCloudUpload } from "react-icons/io";
 import axios from "axios";
 import FileDragActivePannel from "../../file-drag-active-pannel/file-drag-active.pannel";
 
@@ -17,7 +18,6 @@ export default function FileDropZone() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useAtom(fileAtom);
   const [dragActive, setDragActive] = useState(false);
-  console.log("dragActive", dragActive);
 
   const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault();
@@ -112,7 +112,7 @@ export default function FileDropZone() {
       <div>
         {dragActive ? (
           <form
-            className="border-8 border-blue-600 p-4 w-[800px] rounded-lg min-h-[24rem] text-center flex flex-col items-center justify-center cursor-pointer"
+            className="border-8  border-blue-600 p-4 w-[800px] rounded-lg min-h-[24rem] text-center flex flex-col items-center justify-center cursor-pointer"
             onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -144,8 +144,8 @@ export default function FileDropZone() {
               hidden
             />
             <div className="flex flex-col gap-3 justify-center items-center text-gray-500">
-              <TfiUpload className="text-3xl" />
-              <div className="font-bold text-xl my-6">파일을 업로드하세요</div>
+              <IoMdCloudUpload className="text-[100px]" />
+              <div className="font-bold text-2xl my-6">파일을 업로드하세요</div>
             </div>
           </form>
         )}

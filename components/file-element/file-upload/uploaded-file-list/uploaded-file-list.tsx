@@ -18,21 +18,21 @@ export default function UploadedFileList() {
 
   return (
     <div
-      className="flex flex-col items-center p-3 border rounded-xl min-h-72 w-[380px] overflow-hidden
+      className="flex flex-col items-center p-3 border rounded-xl min-h-72 w-[500px] overflow-hidden
     "
     >
       <section>
-        <span className="text-blue-800 font-bold">
+        <span className="text-blue-500 font-extrabold">
           {uploadedSuccessFiles.length}
         </span>{" "}
         / {files.length}개 <span className="font-extrabold">완료</span>
       </section>
-      <section className="py-3">
+      {/* <section className="py-3">
         <div className="w-[300px] h-[5px] rounded-md bg-blue-600" />
-      </section>
-      <section className="bg-white w-[380px]">
+      </section> */}
+      <section className=" w-full">
         {files.map((file, idx: any) => (
-          <div key={idx} className="flex">
+          <div key={idx}>
             <FileCards file={file} />
             {/* <span onClick={() => removeFile(file)}>x</span> */}
           </div>
