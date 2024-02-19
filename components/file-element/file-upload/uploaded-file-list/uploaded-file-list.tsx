@@ -16,7 +16,7 @@ export default function UploadedFileList() {
 
   return (
     <div
-      className="flex flex-col items-center p-3 border rounded-xl min-h-72 w-[500px] overflow-hidden
+      className="flex flex-col items-center p-3 border rounded-xl min-h-72 w-[500px] overflow-hidden bg-white
     "
     >
       <section>

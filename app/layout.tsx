@@ -15,15 +15,20 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
   modal,
+  filelist,
 }: {
   children: React.ReactNode;
   modal: React.ReactNode;
+  filelist: React.ReactNode;
 }) {
   return (
     <html lang="en">
       <body className={noto.className}>
-        {children}
-        {modal}
+        <div className="relative">
+          {children}
+          {modal}
+          <div className="fixed top-0 right-0">{filelist}</div>
+        </div>
       </body>
     </html>
   );
