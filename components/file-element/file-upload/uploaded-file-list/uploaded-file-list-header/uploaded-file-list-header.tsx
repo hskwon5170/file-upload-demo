@@ -2,11 +2,13 @@
 
 import { fileAtom, minimizeFileListAtom } from "@/atom/files";
 import { useAtomValue, useSetAtom } from "jotai";
+import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { MdClose } from "react-icons/md";
 import { VscChromeMinimize } from "react-icons/vsc";
 
 export default function UploadedFileListHeader() {
+  const router = useRouter();
   const files = useAtomValue(fileAtom);
   const uploadedSuccessFiles = useMemo(() => {
     return files.filter((file) => file?.progress === 100);
@@ -26,7 +28,7 @@ export default function UploadedFileListHeader() {
           className="hover:bg-gray-100 cursor-pointer"
           onClick={() => setMinimize(true)}
         />
-        <MdClose className="hover:bg-gray-100 cursor-pointer" />
+        {/* <MdClose className="hover:bg-gray-100 cursor-pointer" /> */}
       </div>
     </div>
   );

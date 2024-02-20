@@ -1,20 +1,12 @@
+import { FileDto } from "@/types/files";
 import Link from "next/link";
 
-interface FileCardProps {
-  file: any;
-  // onImageClick: (e: number) => void;
-  // onClick?(id: string): void;
-  // isPopup?: boolean;
-  // fileId: number;
-}
-
-export default function FileCard({
-  file,
-}: // onImageClick,
-// onClick,
+export default function FileCard(
+  { file }: { file: FileDto } // onImageClick,
+) // onClick,
 // isPopup,
 // fileId,
-FileCardProps) {
+{
   const { originalName, id, extensionType, width, height, displayUrl } = file;
 
   return (

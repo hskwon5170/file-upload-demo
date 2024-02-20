@@ -27,7 +27,7 @@ export default function RootLayout({
         <div className="relative">
           {children}
           {modal}
-          <div className="fixed top-[35vh] right-0">{filelist}</div>
+          <div className="fixed bottom-4 right-3">{filelist}</div>
         </div>
       </body>
     </html>

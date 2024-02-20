@@ -1,35 +1,34 @@
 "use client";
 import { fileAtom } from "@/atom/files";
 import { useAtom } from "jotai";
-import { useRef, useState } from "react";
-import { TfiUpload } from "react-icons/tfi";
+import { useRef, useState, DragEvent } from "react";
 import { IoMdCloudUpload } from "react-icons/io";
 import axios from "axios";
 import FileDragActivePannel from "../../file-drag-active-pannel/file-drag-active.pannel";
-
-type FileWithProgress = {
-  file: File;
-  progress?: number;
-  status: "uploading" | "done";
-  id: number;
-  isError?: boolean;
-};
+import type { FileWithProgress } from "@/types/files";
 
 export default function FileDropZone() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useAtom(fileAtom);
   const [dragActive, setDragActive] = useState(false);
 
-  const handleDrop = async (e: React.DragEvent) => {
+  const handleDrop = async (e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
 
     const timestamp = new Date().getTime();
 
-    const uploadedFiles: FileWithProgress[] = Array.from(
-      e.dataTransfer.files
-    ).map((file, idx) => ({
+    const newFiles = Array.from(e.dataTransfer.files).filter(
+      (newFile) => !isFileAlreadyUploaded(newFile, files) // 이미 업로드된 파일인지를 확인, 업로드 되지 않은 파일만을 필터링하기
+    );
+
+    if (newFiles.length === 0) {
+      alert("이미 업로드된 파일입니다.");
+      return;
+    }
+
+    const uploadedFiles: FileWithProgress[] = newFiles.map((file, idx) => ({
       file,
       progress: 0,
       status: "uploading",
@@ -84,25 +83,25 @@ export default function FileDropZone() {
     });
   };
 
-  const handleDragLeave = (e: any) => {
+  const handleDragLeave = (e: DragEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
   };
 
-  const handleDragOver = (e: any) => {
+  const handleDragOver = (e: DragEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(true);
   };
 
-  const handleDragEnter = (e: any) => {
+  const handleDragEnter = (e: DragEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(true);
   };
 
-  const removeFile = (fileName: any, idx: any) => {
+  const removeFile = (fileName: string, idx: number) => {
     const newArr = [...files];
     newArr.splice(idx, 1);
     setFiles([]);
@@ -112,6 +111,18 @@ export default function FileDropZone() {
   const openFileExplorer = () => {
     inputRef.current.value = "";
     inputRef.current?.click();
+  };
+
+  const isFileAlreadyUploaded = (
+    newFile: File,
+    uploadedFile: FileWithProgress[]
+  ) => {
+    return uploadedFile.some(
+      (file) =>
+        file.file.name === newFile.name &&
+        file.file.size === newFile.size &&
+        file.file.lastModified === newFile.lastModified
+    );
   };
 
   return (

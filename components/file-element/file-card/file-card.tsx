@@ -3,19 +3,9 @@ import { FaCheck } from "react-icons/fa";
 import ProgressBar from "./progress-bar/progress-bar";
 import { animated, useSpring } from "@react-spring/web";
 import { FaExclamation } from "react-icons/fa6";
+import { FileWithProgress } from "@/types/files";
 
-type Props = {
-  file: FileWithProgress;
-};
-
-type FileWithProgress = {
-  file: File;
-  progress?: number;
-  status: "uploading" | "done";
-  isError?: boolean;
-};
-
-export default function FileCards({ file }: Props) {
+export default function FileCards({ file }: { file: FileWithProgress }) {
   const openSprings = useSpring({
     from: { transform: "translateY(-20px)", opacity: 0, scale: 0.95 },
     to: { transform: "translateY(0px)", opacity: 1, scale: 1 },
@@ -43,7 +33,7 @@ export default function FileCards({ file }: Props) {
               {file?.file.name}
             </div>
             <div className="text-[13px] text-gray-500">
-              {ConvertBytesToMegabytes(file?.file.size)}
+              {ConvertBytes(file?.file.size)}
             </div>
             <ProgressBar
               progress={file?.progress ?? 0}
@@ -87,8 +77,13 @@ const StatusIcon = ({
     </>
   );
 };
-const ConvertBytesToMegabytes = (bytes: number) => {
-  return (bytes / 1024 / 1024).toFixed(2) + "MB";
+const ConvertBytes = (bytes: number) => {
+  // return (bytes / 1024 / 1024).toFixed(2) + "MB";
+  if (bytes >= 1024 * 1024) {
+    return (bytes / 1024 / 1024).toFixed(2) + "MB";
+  } else {
+    return (bytes / 1024).toFixed(2) + "KB";
+  }
 };
 
 const Spinner = () => {

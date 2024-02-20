@@ -1,17 +1,5 @@
 import { atom } from "jotai";
-
-type FileWithProgress = {
-  file: File;
-  progress?: number;
-  status: "uploading" | "done";
-  id: number;
-  isError?: boolean;
-};
-
-type ProgressAtomProps = {
-  id: number;
-  progress: number;
-};
+import type { FileWithProgress, ProgressAtomProps } from "@/types/files";
 
 export const fileAtom = atom<FileWithProgress[]>([]);
 

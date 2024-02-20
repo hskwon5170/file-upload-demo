@@ -3,6 +3,7 @@
 import BackButton from "@/components/back-button/backButton";
 import { useEffect } from "react";
 import styles from "./page.module.css";
+import { LuDownload } from "react-icons/lu";
 
 type Root = {
   data: ImageData;
@@ -37,8 +38,6 @@ export default function PreviewModal({ data }: Root) {
     };
   }, []);
 
-  console.log("데이터입니다", data);
-
   const { originalName, displayUrl } = data;
 
   return (
@@ -50,7 +49,9 @@ export default function PreviewModal({ data }: Root) {
             <div className="text-gray-200 text-lg max-w-[350px] truncate">
               {originalName}
             </div>
-            <div className="text-white">다운로드</div>
+            <div className="bg-gray-200 w-8 h-8 rounded-md border-none shadow-md flex justify-center items-center">
+              <LuDownload />
+            </div>
           </div>
           <div
             className={`${styles["image-zone"]} flex flex-col items-center max-h-[80vh] overflow-y-auto pr-6`}
