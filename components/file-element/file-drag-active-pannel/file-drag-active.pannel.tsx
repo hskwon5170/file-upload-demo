@@ -4,7 +4,7 @@ import Lottie from "react-lottie-player";
 export default function FileDragActivePannel() {
   return (
     <div className="flex flex-col items-center text-gray-500 -z-10">
-      <div className="w-[250px] h-[250px]">
+      <div className="w-[250px] h-[250px] ">
         <Lottie loop animationData={lottieJson} play />
       </div>
 

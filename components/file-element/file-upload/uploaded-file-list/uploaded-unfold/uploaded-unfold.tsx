@@ -11,6 +11,7 @@ export default function UploadedUnfold() {
   const files = useAtomValue(fileAtom);
   const minimize = useAtomValue(minimizeFileListAtom);
   const [expand, setExpand] = useState(!minimize);
+  console.log("files아톰", files);
 
   if (!files) return null;
   if (!files.length) return null;

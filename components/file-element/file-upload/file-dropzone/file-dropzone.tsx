@@ -13,75 +13,179 @@ export default function FileDropZone() {
   const [files, setFiles] = useAtom(fileAtom);
   const [dragActive, setDragActive] = useState(false);
 
+  // const handleDrop = async (e: DragEvent) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   setDragActive(false);
+
+  //   const timestamp = new Date().getTime();
+
+  //   const newFiles = Array.from(e.dataTransfer.files).filter(
+  //     (newFile) => !isFileAlreadyUploaded(newFile, files) // 이미 업로드된 파일인지를 확인, 업로드 되지 않은 파일만을 필터링하기
+  //   );
+
+  //   if (newFiles.length === 0) {
+  //     alert("이미 업로드된 파일입니다.");
+  //     return;
+  //   }
+
+  //   const uploadedFiles: FileWithProgress[] = newFiles.map((file, idx) => ({
+  //     file,
+  //     progress: 0,
+  //     status: "uploading",
+  //     id: timestamp + idx,
+  //     isError: false,
+  //   }));
+
+  //   setFiles((prev) => [...prev, ...uploadedFiles]);
+
+  //   uploadedFiles.forEach(async (fileWithStatus) => {
+  //     const formData = new FormData();
+  //     formData.append("file", fileWithStatus.file);
+
+  //     try {
+  //       await axios.post("http://10.1.1.190:8084/api/files/upload", formData, {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //         onUploadProgress: (e) => {
+  //           const percentCompleted = Math.round((e.loaded * 100) / e.total!);
+  //           setFiles((prev) => {
+  //             return prev.map((file) => {
+  //               if (file.id === fileWithStatus.id) {
+  //                 return { ...file, progress: percentCompleted };
+  //               }
+  //               return file;
+  //             });
+  //           });
+  //         },
+  //       });
+
+  //       setFiles((prev) =>
+  //         prev.map((file) =>
+  //           file?.id === fileWithStatus?.id
+  //             ? { ...file, status: "done", progress: 100 }
+  //             : file
+  //         )
+  //       );
+  //       // console.log("업로드 성공", response);
+  //     } catch (error) {
+  //       // console.error("error입니다", error);
+  //       setFiles((prev) => {
+  //         return prev.map((file) => {
+  //           if (file.id === fileWithStatus.id) {
+  //             return { ...file, status: "error", progress: 0, isError: true };
+  //           } else {
+  //             return file;
+  //           }
+  //         });
+  //       });
+  //     }
+  //   });
+  // };
+
   const handleDrop = async (e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
 
-    const timestamp = new Date().getTime();
+    const timeStamp = new Date().getTime();
 
-    const newFiles = Array.from(e.dataTransfer.files).filter(
-      (newFile) => !isFileAlreadyUploaded(newFile, files) // 이미 업로드된 파일인지를 확인, 업로드 되지 않은 파일만을 필터링하기
-    );
+    for (const newFile of Array.from(e.dataTransfer.files)) {
+      const isAlreadyUploaded = isFileAlreadyUploaded(newFile, files);
 
-    if (newFiles.length === 0) {
-      alert("이미 업로드된 파일입니다.");
-      return;
-    }
-
-    const uploadedFiles: FileWithProgress[] = newFiles.map((file, idx) => ({
-      file,
-      progress: 0,
-      status: "uploading",
-      id: timestamp + idx,
-      isError: false,
-    }));
-
-    setFiles((prev) => [...prev, ...uploadedFiles]);
-
-    uploadedFiles.forEach(async (fileWithStatus) => {
-      const formData = new FormData();
-      formData.append("file", fileWithStatus.file);
-
-      try {
-        await axios.post("http://10.1.1.190:8084/api/files/upload", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (e) => {
-            const percentCompleted = Math.round((e.loaded * 100) / e.total!);
-            setFiles((prev) => {
-              return prev.map((file) => {
-                if (file.id === fileWithStatus.id) {
-                  return { ...file, progress: percentCompleted };
-                }
-                return file;
-              });
-            });
-          },
-        });
-
-        setFiles((prev) =>
-          prev.map((file) =>
-            file?.id === fileWithStatus?.id
-              ? { ...file, status: "done", progress: 100 }
-              : file
-          )
+      if (isAlreadyUploaded) {
+        const isReuploadConfirmed = window.confirm(
+          `${newFile.name} 파일은 이미 업로드 되었습니다. 다시 업로드 하시겠습니까?`
         );
-        // console.log("업로드 성공", response);
-      } catch (error) {
-        // console.error("error입니다", error);
-        setFiles((prev) => {
-          return prev.map((file) => {
-            if (file.id === fileWithStatus.id) {
-              return { ...file, status: "error", progress: 0, isError: true };
-            } else {
-              return file;
-            }
+
+        if (isReuploadConfirmed) {
+          setFiles((prev) => {
+            const updateFile = prev.map((files) => {
+              if (
+                files.file.name === newFile.name &&
+                files.file.size === newFile.size &&
+                files.file.lastModified === newFile.lastModified
+              ) {
+                return {
+                  ...files,
+                  file: newFile,
+                  progress: 0,
+                  status: "uploading",
+                  id: timeStamp + newFile.lastModified,
+                  isError: false,
+                };
+              }
+              return files;
+            });
+            return updateFile;
           });
-        });
+        }
+
+        if (!isReuploadConfirmed) continue;
       }
-    });
+
+      const fileWithStatus: FileWithProgress = {
+        file: newFile,
+        progress: 0,
+        status: "uploading",
+        id: timeStamp + newFile.lastModified,
+        isError: false,
+      };
+
+      if (isAlreadyUploaded) {
+        setFiles((prev) =>
+          prev.filter((file) => file.id !== fileWithStatus.id)
+        );
+      }
+
+      setFiles((prev) => [...prev, fileWithStatus]);
+      await UploadFile(fileWithStatus);
+    }
+  };
+
+  const UploadFile = async (fileWithStatus: FileWithProgress) => {
+    const formData = new FormData();
+    formData.append("file", fileWithStatus.file);
+
+    try {
+      await axios.post("http://10.1.1.190:8084/api/files/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        onUploadProgress: (e) => {
+          const percentCompleted = Math.round((e.loaded * 100) / e.total!);
+          setFiles((prev) => {
+            return prev.map((file) => {
+              if (file.id === fileWithStatus.id) {
+                return { ...file, progress: percentCompleted };
+              }
+              return file;
+            });
+          });
+        },
+      });
+
+      setFiles((prev) =>
+        prev.map((file) =>
+          file?.id === fileWithStatus?.id
+            ? { ...file, status: "done", progress: 100 }
+            : file
+        )
+      );
+      // console.log("업로드 성공", response);
+    } catch (error) {
+      // console.error("error입니다", error);
+      setFiles((prev) => {
+        return prev.map((file) => {
+          if (file.id === fileWithStatus.id) {
+            return { ...file, status: "error", progress: 0, isError: true };
+          } else {
+            return file;
+          }
+        });
+      });
+    }
   };
 
   const handleDragLeave = (e: DragEvent<HTMLFormElement>) => {
