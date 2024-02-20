@@ -5,6 +5,7 @@ import { useRef, useState, DragEvent } from "react";
 import { IoMdCloudUpload } from "react-icons/io";
 import axios from "axios";
 import FileDragActivePannel from "../../file-drag-active-pannel/file-drag-active.pannel";
+
 import type { FileWithProgress } from "@/types/files";
 
 export default function FileDropZone() {
@@ -130,7 +131,7 @@ export default function FileDropZone() {
       <div>
         {dragActive ? (
           <form
-            className="border-8  border-blue-600 p-4 w-[800px] rounded-lg min-h-[24rem] text-center flex flex-col items-center justify-center cursor-pointer"
+            className="border-8  border-blue-600 p-4 w-[800px] rounded-lg min-h-[24rem] text-center flex flex-col items-center justify-center cursor-pointer z-10"
             onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
