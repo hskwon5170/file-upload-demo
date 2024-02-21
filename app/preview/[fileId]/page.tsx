@@ -1,7 +1,12 @@
+"use client";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
 export default function PreviewPage() {
-  return (
-    <div>
-      <div>preview page</div>
-    </div>
-  );
+  const router = useRouter();
+  useEffect(() => {
+    router.replace("/");
+  }, [router]);
+
+  return null;
 }

@@ -1,4 +1,4 @@
-import PreviewModal from "../_component/previewModal";
+import PreviewModal from "../../../../components/preview-modal/preview-modal";
 
 type Props = {
   params: {

@@ -35,10 +35,10 @@ export default function FileCards({ file }: { file: FileWithProgress }) {
             <div className="text-[13px] text-gray-500">
               {ConvertBytes(file?.file.size)}
             </div>
-            <ProgressBar
+            {/* <ProgressBar
               progress={file?.progress ?? 0}
               isError={file.isError ?? false}
-            />
+            /> */}
           </div>
           <div className="flex items-center justify-center p-2 ">
             <StatusIcon

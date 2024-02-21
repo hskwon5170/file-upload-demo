@@ -1,12 +1,12 @@
-"use client";
-import { fileAtom } from "@/atom/files";
-import { useAtom } from "jotai";
-import { useRef, useState, DragEvent } from "react";
-import { IoMdCloudUpload } from "react-icons/io";
-import axios from "axios";
-import FileDragActivePannel from "../../file-drag-active-pannel/file-drag-active.pannel";
+'use client';
+import { fileAtom } from '@/atom/files';
+import { useAtom } from 'jotai';
+import { useRef, useState, DragEvent } from 'react';
+import { IoMdCloudUpload } from 'react-icons/io';
+import axios from 'axios';
+import FileDragActivePannel from '../../file-drag-active-pannel/file-drag-active.pannel';
 
-import type { FileWithProgress } from "@/types/files";
+import type { FileWithProgress } from '@/types/files';
 
 export default function FileDropZone() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -95,9 +95,7 @@ export default function FileDropZone() {
       const isAlreadyUploaded = isFileAlreadyUploaded(newFile, files);
 
       if (isAlreadyUploaded) {
-        const isReuploadConfirmed = window.confirm(
-          `${newFile.name} 파일은 이미 업로드 되었습니다. 다시 업로드 하시겠습니까?`
-        );
+        const isReuploadConfirmed = window.confirm(`${newFile.name} 파일은 이미 업로드 되었습니다. 다시 업로드 하시겠습니까?`);
 
         if (isReuploadConfirmed) {
           setFiles((prev) => {
@@ -111,7 +109,7 @@ export default function FileDropZone() {
                   ...files,
                   file: newFile,
                   progress: 0,
-                  status: "uploading",
+                  status: 'uploading',
                   id: timeStamp + newFile.lastModified,
                   isError: false,
                 };
@@ -128,15 +126,13 @@ export default function FileDropZone() {
       const fileWithStatus: FileWithProgress = {
         file: newFile,
         progress: 0,
-        status: "uploading",
+        status: 'uploading',
         id: timeStamp + newFile.lastModified,
         isError: false,
       };
 
       if (isAlreadyUploaded) {
-        setFiles((prev) =>
-          prev.filter((file) => file.id !== fileWithStatus.id)
-        );
+        setFiles((prev) => prev.filter((file) => file.id !== fileWithStatus.id));
       }
 
       setFiles((prev) => [...prev, fileWithStatus]);
@@ -146,12 +142,12 @@ export default function FileDropZone() {
 
   const UploadFile = async (fileWithStatus: FileWithProgress) => {
     const formData = new FormData();
-    formData.append("file", fileWithStatus.file);
+    formData.append('file', fileWithStatus.file);
 
     try {
-      await axios.post("http://10.1.1.190:8084/api/files/upload", formData, {
+      await axios.post('http://10.1.1.190:8084/api/files/upload', formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
         onUploadProgress: (e) => {
           const percentCompleted = Math.round((e.loaded * 100) / e.total!);
@@ -166,20 +162,14 @@ export default function FileDropZone() {
         },
       });
 
-      setFiles((prev) =>
-        prev.map((file) =>
-          file?.id === fileWithStatus?.id
-            ? { ...file, status: "done", progress: 100 }
-            : file
-        )
-      );
+      setFiles((prev) => prev.map((file) => (file?.id === fileWithStatus?.id ? { ...file, status: 'done', progress: 100 } : file)));
       // console.log("업로드 성공", response);
     } catch (error) {
       // console.error("error입니다", error);
       setFiles((prev) => {
         return prev.map((file) => {
           if (file.id === fileWithStatus.id) {
-            return { ...file, status: "error", progress: 0, isError: true };
+            return { ...file, status: 'error', progress: 0, isError: true };
           } else {
             return file;
           }
@@ -214,19 +204,13 @@ export default function FileDropZone() {
   };
 
   const openFileExplorer = () => {
-    inputRef.current.value = "";
+    inputRef.current.value = '';
     inputRef.current?.click();
   };
 
-  const isFileAlreadyUploaded = (
-    newFile: File,
-    uploadedFile: FileWithProgress[]
-  ) => {
+  const isFileAlreadyUploaded = (newFile: File, uploadedFile: FileWithProgress[]) => {
     return uploadedFile.some(
-      (file) =>
-        file.file.name === newFile.name &&
-        file.file.size === newFile.size &&
-        file.file.lastModified === newFile.lastModified
+      (file) => file.file.name === newFile.name && file.file.size === newFile.size && file.file.lastModified === newFile.lastModified,
     );
   };
 
@@ -235,23 +219,18 @@ export default function FileDropZone() {
       <div>
         {dragActive ? (
           <form
-            className="border-8  border-blue-600 p-4 w-[800px] rounded-lg min-h-[24rem] text-center flex flex-col items-center justify-center cursor-pointer z-10"
+            className="border-8  border-blue-600 p-4 w-[800px] rounded-2xl min-h-[24rem] text-center flex flex-col items-center justify-center cursor-pointer z-10"
             onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
           >
-            <input
-              placeholder="fileInput"
-              type="file"
-              accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf"
-              hidden
-            />
+            <input placeholder="fileInput" type="file" accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf" hidden />
             <FileDragActivePannel />
           </form>
         ) : (
           <form
-            className="bg-gray-100 p-4 w-[800px] rounded-lg min-h-[24rem] text-center flex flex-col items-center justify-center cursor-pointer border-2"
+            className="bg-gray-100 p-4 w-[800px] rounded-2xl min-h-[24rem] text-center flex flex-col items-center justify-center cursor-pointer border-2"
             onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -266,9 +245,9 @@ export default function FileDropZone() {
               accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf"
               hidden
             />
-            <div className="flex flex-col gap-3 justify-center items-center text-gray-500">
+            <div className="flex flex-col items-center justify-center gap-3 text-gray-500">
               <IoMdCloudUpload className="text-[100px]" />
-              <div className="font-bold text-2xl my-6">파일을 업로드하세요</div>
+              <div className="my-6 text-2xl font-bold">파일을 업로드하세요</div>
             </div>
           </form>
         )}
