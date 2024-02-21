@@ -15,6 +15,9 @@ export default function MinimizeUploadedFileList() {
     return files.filter((file) => file?.progress === 100);
   }, [files]);
 
+  if (!files) return null;
+  if (!files.length) return null;
+
   return (
     <div
       className="h-[80px] w-[500px] bg-blue-600 rounded-xl border cursor-pointer flex items-center"

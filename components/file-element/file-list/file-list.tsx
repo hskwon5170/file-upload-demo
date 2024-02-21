@@ -1,6 +1,5 @@
-import { useState } from "react";
-import FileCard from "./file-card";
-import { FileDto } from "@/types/files";
+import FileCard from './file-card';
+import { FileDto } from '@/types/files';
 
 export default function FileList({ files }: { files: FileDto[] }) {
   return (
