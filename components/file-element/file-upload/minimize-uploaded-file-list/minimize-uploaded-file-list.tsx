@@ -1,14 +1,16 @@
-"use client";
-import { fileAtom, minimizeFileListAtom } from "@/atom/files";
-import { useAtom, useAtomValue } from "jotai";
-import { useRouter } from "next/navigation";
-import { useMemo } from "react";
-import { FaCheck } from "react-icons/fa";
+'use client';
+import { closeAtom, fileAtom, minimizeFileListAtom } from '@/atom/files';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
+import { FaCheck } from 'react-icons/fa';
 
 export default function MinimizeUploadedFileList() {
   const router = useRouter();
   const [minimize, setMinimize] = useAtom(minimizeFileListAtom);
   const files = useAtomValue(fileAtom);
+  const setClose = useSetAtom(closeAtom);
+
   const uploadedSuccessFiles = useMemo(() => {
     return files.filter((file) => file?.progress === 100);
   }, [files]);
@@ -19,16 +21,15 @@ export default function MinimizeUploadedFileList() {
       onClick={() => setMinimize(!minimize)}
     >
       <div className="flex w-full px-4 text-white">
-        <div className="flex-1 flex gap-4">
-          <div className="border-2 border-white w-6 h-6 flex items-center justify-center rounded-full p-1">
+        <div className="flex flex-1 gap-4">
+          <div className="flex items-center justify-center w-6 h-6 p-1 border-2 border-white rounded-full">
             <FaCheck />
           </div>
           <div className="font-extrabold">
-            <span>{uploadedSuccessFiles.length}</span> / {files.length}개{" "}
-            <span> 올리기 완료</span>
+            <span>{uploadedSuccessFiles.length}</span> / {files.length}개 <span> 올리기 완료</span>
           </div>
         </div>
-        {/* <div>닫기</div> */}
+        <div onClick={() => setClose(true)}>닫기</div>
       </div>
     </div>
   );

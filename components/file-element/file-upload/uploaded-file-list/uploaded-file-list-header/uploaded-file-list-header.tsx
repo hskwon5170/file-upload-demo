@@ -1,6 +1,6 @@
 'use client';
 
-import { fileAtom, minimizeFileListAtom } from '@/atom/files';
+import { closeAtom, fileAtom, minimizeFileListAtom } from '@/atom/files';
 import ProgressBar from '@/components/file-element/file-card/progress-bar/progress-bar';
 import { FileWithProgress } from '@/types/files';
 import { useAtomValue, useSetAtom } from 'jotai';
@@ -15,6 +15,7 @@ export default function UploadedFileListHeader() {
     return files.filter((file) => file?.progress === 100);
   }, [files]);
   const setMinimize = useSetAtom(minimizeFileListAtom);
+  const setClose = useSetAtom(closeAtom);
 
   const average = (files: FileWithProgress[]) => {
     const total = files.reduce((acc, file) => acc + file.progress!, 0);
@@ -31,7 +32,7 @@ export default function UploadedFileListHeader() {
         </div>
         <div className="flex items-center gap-3">
           <VscChromeMinimize className="cursor-pointer hover:bg-gray-100" onClick={() => setMinimize(true)} />
-          {/* <MdClose className="cursor-pointer hover:bg-gray-100" /> */}
+          <MdClose className="cursor-pointer hover:bg-gray-100" onClick={() => setClose(true)} />
         </div>
       </div>
       <ProgressBar progress={average(files)} />

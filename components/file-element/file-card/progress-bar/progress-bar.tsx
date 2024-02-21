@@ -4,7 +4,7 @@ type Props = {
 };
 export default function ProgressBar({ progress, isError }: Props) {
   return (
-    <div className={`w-[370px] h-2  rounded-full ${isError ? 'bg-red-200' : 'bg-blue-200'}`}>
+    <div className={`w-[430px] h-2  rounded-full ${isError ? 'bg-red-200' : 'bg-blue-200'} my-6`}>
       {!isError && (
         <div
           style={{ width: `${progress}%` }}

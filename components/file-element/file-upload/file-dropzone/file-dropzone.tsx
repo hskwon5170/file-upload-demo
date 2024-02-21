@@ -1,16 +1,18 @@
 'use client';
-import { fileAtom } from '@/atom/files';
+import { closeAtom, fileAtom } from '@/atom/files';
 import { useAtom } from 'jotai';
 import { useRef, useState, DragEvent } from 'react';
 import { IoMdCloudUpload } from 'react-icons/io';
 import axios from 'axios';
 import FileDragActivePannel from '../../file-drag-active-pannel/file-drag-active.pannel';
-
+import { FcFile } from 'react-icons/fc';
+import { FcImageFile } from 'react-icons/fc';
 import type { FileWithProgress } from '@/types/files';
 
 export default function FileDropZone() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useAtom(fileAtom);
+  const [close, setClose] = useAtom(closeAtom);
   const [dragActive, setDragActive] = useState(false);
 
   // const handleDrop = async (e: DragEvent) => {
@@ -85,6 +87,8 @@ export default function FileDropZone() {
   // };
 
   const handleDrop = async (e: DragEvent) => {
+    setClose(false);
+    console.log('e', e);
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
