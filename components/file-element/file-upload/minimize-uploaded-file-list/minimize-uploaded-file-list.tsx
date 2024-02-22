@@ -1,18 +1,16 @@
 'use client';
 import { closeAtom, fileAtom, minimizeFileListAtom } from '@/atom/files';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { FaCheck } from 'react-icons/fa';
 
 export default function MinimizeUploadedFileList() {
-  const router = useRouter();
   const [minimize, setMinimize] = useAtom(minimizeFileListAtom);
   const files = useAtomValue(fileAtom);
   const setClose = useSetAtom(closeAtom);
-
+  // console.log('files', files);
   const uploadedSuccessFiles = useMemo(() => {
-    return files.filter((file) => file?.progress === 100);
+    return files?.filter((file) => file?.progress === 100);
   }, [files]);
 
   if (!files) return null;
