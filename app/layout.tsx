@@ -25,8 +25,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={noto.className + ' flex flex-col min-h-screen'}>
-        <div className="flex min-h-screen">
+      <body className={noto.className + ' flex flex-col'}>
+        <div className="flex">
           <div className="w-[200px] bg-gray-200 p-4 fixed h-full top-0 left-0 flex justify-center items-center flex-col">
             Left Sidebar
           </div>
