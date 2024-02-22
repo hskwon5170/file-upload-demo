@@ -46,7 +46,7 @@ export default function UploadedUnfold() {
               <label htmlFor="check">순서대로 PDF 자동 병합</label>
             </div>
             <div className="flex gap-3 mt-2">
-              <Button className="text-black bg-white">취소</Button>
+              <Button className="text-black bg-white">파일 추가</Button>
               <Button className="text-white bg-blue-500">자동분류</Button>
             </div>
           </div>

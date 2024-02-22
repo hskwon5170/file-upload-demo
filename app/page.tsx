@@ -7,11 +7,9 @@ export default async function Main() {
   const files = await res.json();
 
   return (
-    // <EntireDropzoneLayout>
-    <>
+    <EntireDropzoneLayout>
       <FileModule />
       <FileList files={files.content} />
-    </>
-    // </EntireDropzoneLayout>
+    </EntireDropzoneLayout>
   );
 }

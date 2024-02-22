@@ -69,18 +69,23 @@ export default function FileDropZone() {
       <div>
         {dragActive ? (
           <form
-            className="border-8  border-blue-600 p-4 w-[800px] rounded-2xl min-h-[24rem] text-center flex flex-col items-center justify-center cursor-pointer z-10"
+            className="border-8  border-blue-600 p-4 w-[800px] rounded-2xl min-h-[14rem] text-center flex flex-col items-center justify-center cursor-pointer"
             onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
           >
-            <input placeholder="fileInput" type="file" accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf" hidden />
+            <input
+              placeholder="fileInput"
+              type="file"
+              accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf"
+              hidden
+            />
             <FileDragActivePannel />
           </form>
         ) : (
           <form
-            className="bg-gray-100 p-4 w-[800px] rounded-2xl min-h-[24rem] text-center flex flex-col items-center justify-center cursor-pointer border-2"
+            className="bg-gray-100 p-4 w-[800px] rounded-2xl min-h-[14rem] text-center flex flex-col items-center justify-center cursor-pointer border-2"
             onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -97,7 +102,7 @@ export default function FileDropZone() {
               hidden
             />
             <div className="flex flex-col items-center justify-center gap-3 text-gray-500">
-              <IoMdCloudUpload className="text-[100px]" />
+              <IoMdCloudUpload className="text-[60px]" />
               <div className="my-6 text-2xl font-bold">파일을 업로드하세요</div>
             </div>
           </form>
