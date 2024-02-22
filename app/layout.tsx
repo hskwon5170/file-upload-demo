@@ -26,13 +26,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={noto.className + ' flex flex-col min-h-screen'}>
-        <div className="flex flex-1 min-h-screen">
-          <div className="w-[200px] bg-gray-200 p-4 fixed h-full top-0 left-0 flex justify-center items-center flex-col">Left Sidebar</div>
+        <div className="flex min-h-screen">
+          <div className="w-[200px] bg-gray-200 p-4 fixed h-full top-0 left-0 flex justify-center items-center flex-col">
+            Left Sidebar
+          </div>
 
-          <div className="flex flex-col flex-1 ml-[200px] mr-[200px] pt-[4rem]">
-            <div className="p-4 text-white bg-green-500 fixed top-0 left-[200px] right-[200px] z-10">Header</div>
-
-            <div className="overflow-auto flex-1">{children}</div>
+          <div className="fixed top-0 left-[200px] right-[200px] flex flex-col h-screen">
+            <div className="p-4 text-white bg-green-500 z-10">Header</div>
+            <div className="overflow-y-auto flex-1 p-3 ">{children}</div>
           </div>
 
           <div className="w-[200px] bg-gray-200 p-4 fixed h-full top-0 right-0 flex justify-center items-center flex-col">
@@ -41,7 +42,7 @@ export default function RootLayout({
         </div>
 
         {modal}
-        <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2">{filelist}</div>
+        <div className="fixed right-4 bottom-4">{filelist}</div>
         <div className="fixed top-0 right-2">{previewimage}</div>
       </body>
     </html>
