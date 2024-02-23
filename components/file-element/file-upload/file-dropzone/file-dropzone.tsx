@@ -28,7 +28,9 @@ export default function FileDropZone() {
     }
   };
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setClose(false);
     const fileArray = e.target.files;
     if (!fileArray) return;
@@ -103,7 +105,9 @@ export default function FileDropZone() {
             />
             <div className="flex flex-col items-center justify-center gap-3 text-gray-500">
               <IoMdCloudUpload className="text-[60px]" />
-              <div className="my-6 text-2xl font-bold">파일을 업로드하세요</div>
+              <div className="my-6 text-2xl font-bold">
+                파일을 업로드하세요
+              </div>
             </div>
           </form>
         )}

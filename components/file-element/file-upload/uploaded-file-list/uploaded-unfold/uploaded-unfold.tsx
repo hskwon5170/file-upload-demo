@@ -1,6 +1,11 @@
 'use client';
 
-import { closeAtom, fileAtom, minimizeFileListAtom, removeFileAtom } from '@/atom/files';
+import {
+  closeAtom,
+  fileAtom,
+  minimizeFileListAtom,
+  removeFileAtom,
+} from '@/atom/files';
 import { useAtomValue } from 'jotai';
 import UploadedFileListHeader from '../uploaded-file-list-header/uploaded-file-list-header';
 import FileCards from '@/components/file-element/file-card/file-card';
@@ -29,14 +34,19 @@ export default function UploadedUnfold() {
         </section>
         <section
           className={`w-full px-10 overflow-y-auto ${styles['list']}`}
-          style={{ maxHeight: `calc(100% - ${buttonSectionHeight} - 5.3rem)` }}
+          style={{
+            maxHeight: `calc(100% - ${buttonSectionHeight} - 5.3rem)`,
+          }}
         >
-          {files.map((file) => (
-            <div key={file.id}>
-              <FileCards file={file} />
-              {/* <span onClick={() => removeFile(file)}>x</span> */}
-            </div>
-          ))}
+          {files.map((file, idx) => {
+            const standard = idx === 0;
+            return (
+              <div key={file.id}>
+                <FileCards file={file} standard={standard} />
+                {/* <span onClick={() => removeFile(file)}>x</span> */}
+              </div>
+            );
+          })}
         </section>
 
         <section className="absolute bottom-0 flex flex-col items-start w-full h-24 gap-3 overflow-hidden bg-white border-t-[1px]">
@@ -46,8 +56,12 @@ export default function UploadedUnfold() {
               <label htmlFor="check">순서대로 PDF 자동 병합</label>
             </div>
             <div className="flex gap-3 mt-2">
-              <Button className="text-black bg-white">파일 추가</Button>
-              <Button className="text-white bg-blue-500">자동분류</Button>
+              <Button className="text-black bg-white">
+                파일 추가
+              </Button>
+              <Button className="text-white bg-blue-500">
+                자동분류
+              </Button>
             </div>
           </div>
         </section>
