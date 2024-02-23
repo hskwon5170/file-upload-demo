@@ -45,7 +45,7 @@ export default function RootLayout({
             <div className="p-4 text-white bg-green-500 z-10">
               Header
             </div>
-            <div className="overflow-y-auto flex-1 ">{children}</div>
+            <div className="overflow-y-auto flex-1">{children}</div>
           </div>
 
           <div className="w-[200px] bg-gray-200 p-4 fixed h-full top-0 right-0 flex justify-center items-center flex-col">
