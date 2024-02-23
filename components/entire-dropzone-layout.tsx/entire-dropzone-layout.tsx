@@ -5,6 +5,8 @@ import type { FileWithProgress } from '@/types/files';
 import { DragEvent, useState, useEffect } from 'react';
 import FileDragActivePannel from '../file-element/file-drag-active-pannel/file-drag-active.pannel';
 import EntireDropzonePannel from './entire-dropzone-pannel';
+import { useSetAtom } from 'jotai';
+import { closeAtom } from '@/atom/files';
 
 type Props = {
   children: React.ReactNode;
@@ -15,8 +17,7 @@ export default function EntireDropzoneLayout({ children }: Props) {
   const { handleFile } = useHandleFile();
   const [dragActive, setDragActive] = useState(false);
   const [dragCounter, setDragCounter] = useState(0);
-  // console.log('dragCounter', dragCounter);
-  // console.log('dragActive', dragActive);
+  const setClose = useSetAtom(closeAtom);
 
   useEffect(() => {
     if (dragCounter === 0) {
@@ -32,6 +33,7 @@ export default function EntireDropzoneLayout({ children }: Props) {
     e.preventDefault();
     e.stopPropagation();
     setDragCounter(0);
+    setClose(false);
 
     for (const newFile of Array.from(e.dataTransfer.files)) {
       const handledFile = await handleFile(newFile);
@@ -59,7 +61,7 @@ export default function EntireDropzoneLayout({ children }: Props) {
   return (
     <>
       <div
-        className={`dropzone-container w-full h-full relative z-40 p-6`}
+        className="w-full h-full relative z-40 p-10"
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragEnter={handleDragEnter}

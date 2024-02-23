@@ -26,7 +26,7 @@ export default function UploadedUnfold() {
   return (
     <div className={`${close ? 'hidden' : null}`}>
       <div
-        className={`flex flex-col items-center border rounded-xl py-3 h-[500px] w-[500px] overflow-hidden bg-white relative
+        className={`flex flex-col items-center border rounded-xl shadow-2xl py-3 h-[500px] w-[500px] overflow-hidden bg-white relative
   ${minimize ? 'hidden' : ''}`}
       >
         <section className="w-full bg-white border-b-[1px]">

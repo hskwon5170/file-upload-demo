@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import BackButton from "@/components/back-button/backButton";
-import { useEffect, useState } from "react";
-import styles from "./page.module.css";
-import { LuDownload } from "react-icons/lu";
-import OcrButton from "./ocr-button";
-import DownloadButton from "./download-button";
-import ZoomButton from "./zoom-button";
+import BackButton from '@/components/back-button/backButton';
+import { useEffect, useState } from 'react';
+import styles from './page.module.css';
+import OcrButton from './ocr-button';
+import DownloadButton from './download-button';
+import ZoomButton from './zoom-button';
+import Image from 'next/image';
 
 type Root = {
   data: ImageData;
@@ -26,18 +26,18 @@ type ImageData = {
   width: number;
   fileCollection: null;
   displayUrl: string;
-  indexStatus: "SUCCESS";
+  indexStatus: 'SUCCESS';
   highlightCoordinate: HighlightCoordinate;
 };
 
 export default function PreviewModal({ data }: Root) {
   useEffect(() => {
     // 모달이 마운트될 때 body의 overflow를 hidden으로 설정
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = 'hidden';
 
     return () => {
       // 컴포넌트가 언마운트될 때 원래 상태로 복구
-      document.body.style.overflow = "";
+      document.body.style.overflow = '';
     };
   }, []);
 
@@ -64,11 +64,15 @@ export default function PreviewModal({ data }: Root) {
             </div>
           </div>
           <div
-            className={`${styles["image-zone"]} flex flex-col items-center max-h-[80vh] overflow-y-auto pr-6 py-5`}
+            className={`${styles['image-zone']} flex flex-col items-center max-h-[80vh] overflow-y-auto pr-6 py-5`}
           >
-            <img className="w-[600px] h-[600px]" src={displayUrl} />
-            <img className="w-[600px] h-[600px]" src={displayUrl} />
-            <img className="w-[600px] h-[600px]" src={displayUrl} />
+            <Image
+              alt=""
+              src={displayUrl}
+              width={600}
+              height={600}
+              priority
+            />
           </div>
         </div>
       </div>
