@@ -23,6 +23,7 @@ export default function PdfPreview({
   setSelectedPage,
 }: Props) {
   const [numPages, setNumPages] = useState(0);
+  const [isInitialRender, setIsInitialRender] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
@@ -41,8 +42,31 @@ export default function PdfPreview({
     }
   }, [selectedPage, isPreview]);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const pageNumber = parseInt(
+              entry.target.getAttribute('data-page-number') || '1',
+            );
+            console.log('pageNumber', pageNumber);
+            !isPreview && setSelectedPage(pageNumber);
+          }
+        });
+      },
+      { root: containerRef.current, threshold: 0.9 },
+    );
+
+    const pages = containerRef.current?.querySelectorAll('.pdfpage');
+    pages?.forEach((page) => observer.observe(page));
+
+    return () => observer.disconnect();
+  }, [numPages, setSelectedPage, isPreview]);
+
   return (
     <div
+      id="scrollArea"
       ref={containerRef}
       className={`${styles['image-zone']} flex flex-col items-center max-h-[80vh] overflow-y-auto pr-6 py-5`}
     >
@@ -56,7 +80,7 @@ export default function PdfPreview({
             {isPreview && <p className="text-white">{idx + 1}</p>}
 
             <Page
-              className={`${idx === selectedPage - 1 && isPreview ? 'border-4 border-blue-500' : 'border-4 border-[#2e2e2f]'} ${!isPreview ? 'my-10' : null} cursor-pointer`}
+              className={`${idx === selectedPage - 1 && isPreview ? 'border-4 border-blue-500' : 'border-4 border-[#2e2e2f]'} ${!isPreview ? 'my-10' : null} cursor-pointer pdfpage`}
               pageNumber={idx + 1}
               height={size}
               onClick={() => isPreview && setSelectedPage(idx + 1)}
@@ -69,38 +93,5 @@ export default function PdfPreview({
         ))}
       </Document>
     </div>
-    // ==
-    // <div
-    //   className={`${styles['image-zone']} flex flex-col items-center max-h-[80vh] overflow-y-auto pr-6 py-5`}
-    // >
-    //   {isDocumentLoading ? (
-    //     <div className="flex justify-center items-center h-full">
-    //       <LoadingSpinner />
-    //     </div>
-    //   ) : (
-    //     <Document
-    //       file={file}
-    //       onLoadSuccess={onDocumentLoadSuccess}
-    //       onLoadError={onDocumentLoadError}
-    //     >
-    //       {Array.from(new Array(numPages), (el, idx) => (
-    //         <div key={idx + 1} className={`page_${idx + 1} my-2`}>
-    //           {isPreview && <p className="text-white">{idx + 1}</p>}
-
-    //           <Page
-    //             className={`${idx === selectedPage - 1 && isPreview ? 'border-4 border-blue-500' : 'border-4 border-[#2e2e2f]'} ${!isPreview ? 'my-10' : ''} cursor-pointer`}
-    //             pageNumber={idx + 1}
-    //             height={size}
-    //             onClick={() => isPreview && setSelectedPage(idx + 1)}
-    //             renderAnnotationLayer={false}
-    //             renderTextLayer={false}
-    //             scale={1.2}
-    //             onRenderSuccess={() => handlePageRender(idx + 1)}
-    //           />
-    //         </div>
-    //       ))}
-    //     </Document>
-    //   )}
-    // </div>
   );
 }
