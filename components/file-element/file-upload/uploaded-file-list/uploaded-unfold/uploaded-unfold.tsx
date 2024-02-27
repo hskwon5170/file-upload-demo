@@ -3,10 +3,11 @@
 import {
   closeAtom,
   fileAtom,
+  fileExploreTriggerAtom,
   minimizeFileListAtom,
   removeFileAtom,
 } from '@/atom/files';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import UploadedFileListHeader from '../uploaded-file-list-header/uploaded-file-list-header';
 import FileCards from '@/components/file-element/file-card/file-card';
 import styles from './uploded-unfold.module.css';
@@ -16,12 +17,11 @@ export default function UploadedUnfold() {
   const files = useAtomValue(fileAtom);
   const minimize = useAtomValue(minimizeFileListAtom);
   const close = useAtomValue(closeAtom);
+  const setTrigger = useSetAtom(fileExploreTriggerAtom);
   // const removeFile = useSetAtom(removeFileAtom);
 
   if (!files) return null;
   if (!files.length) return null;
-
-  const buttonSectionHeight = '80px';
 
   return (
     <div className={`${close ? 'hidden' : null}`}>
@@ -32,10 +32,11 @@ export default function UploadedUnfold() {
         <section className="w-full bg-white border-b-[1px]">
           <UploadedFileListHeader />
         </section>
+
         <section
-          className={`w-full px-10 overflow-y-auto ${styles['list']}`}
+          className={`w-full px-10 min-h-[300px] overflow-y-auto ${styles['list']}`}
           style={{
-            maxHeight: `calc(100% - ${buttonSectionHeight} - 5.3rem)`,
+            maxHeight: `calc(100% - ${buttonSectionHeight} - 4rem)`,
           }}
         >
           {files.map((file, idx) => {
@@ -49,14 +50,17 @@ export default function UploadedUnfold() {
           })}
         </section>
 
-        <section className="absolute bottom-0 flex flex-col items-start w-full h-24 gap-3 overflow-hidden bg-white border-t-[1px]">
-          <div className="w-full px-10 pt-3">
-            <div className="flex gap-3">
+        <section className="flex flex-col items-start w-full gap-3 bg-white border-t-[1px]">
+          <div className="w-full px-10">
+            <div className="flex gap-3 my-3">
               <input type="checkbox" id="check" />
-              <label htmlFor="check">순서대로 PDF 자동 병합</label>
+              <label htmlFor="check">순서대로 PDF 일괄 병합</label>
             </div>
             <div className="flex gap-3 mt-2">
-              <Button className="text-black bg-white">
+              <Button
+                onClick={() => setTrigger(true)}
+                className="text-black bg-white cursor-pointer"
+              >
                 파일 추가
               </Button>
               <Button className="text-white bg-blue-500">
@@ -69,3 +73,5 @@ export default function UploadedUnfold() {
     </div>
   );
 }
+
+const buttonSectionHeight = '80px';

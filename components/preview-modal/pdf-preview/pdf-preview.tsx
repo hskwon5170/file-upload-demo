@@ -3,7 +3,6 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import styles from '../preview-modal.module.css';
-import LoadingSpinner from '@/components/loading-spinner/loading-spinner';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -23,7 +22,6 @@ export default function PdfPreview({
   setSelectedPage,
 }: Props) {
   const [numPages, setNumPages] = useState(0);
-  const [isInitialRender, setIsInitialRender] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
@@ -59,10 +57,10 @@ export default function PdfPreview({
     );
 
     const pages = containerRef.current?.querySelectorAll('.pdfpage');
-    pages?.forEach((page) => observer.observe(page));
+    pages && pages.forEach((page) => page && observer.observe(page));
 
     return () => observer.disconnect();
-  }, [numPages, setSelectedPage, isPreview]);
+  }, [isPreview, setSelectedPage, numPages]);
 
   return (
     <div

@@ -1,7 +1,7 @@
 'use client';
-import { closeAtom } from '@/atom/files';
-import { useSetAtom } from 'jotai';
-import { useRef, useState, DragEvent } from 'react';
+import { closeAtom, fileExploreTriggerAtom } from '@/atom/files';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useRef, useState, DragEvent, useEffect } from 'react';
 import { IoMdCloudUpload } from 'react-icons/io';
 import FileDragActivePannel from '../../file-drag-active-pannel/file-drag-active.pannel';
 import useUpload from '@/hooks/useUpload';
@@ -65,6 +65,15 @@ export default function FileDropZone() {
       inputRef.current.click();
     }
   };
+
+  // 업로드 상태 모듈에서 파일 추가 버튼 클릭
+  const [trigger, setTrigger] = useAtom(fileExploreTriggerAtom);
+  useEffect(() => {
+    if (trigger) {
+      openFileExplorer();
+    }
+    setTrigger(false);
+  }, [trigger, setTrigger]);
 
   return (
     <div className="flex items-center justify-center">

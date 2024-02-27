@@ -16,7 +16,7 @@ type Props = {
 
 export default function FileCards({ file, standard }: Props) {
   const fileExtension = file.file?.type.split('/')[1];
-  console.log('fileExtension', fileExtension);
+  // console.log('fileExtension', fileExtension);
   const openSprings = useSpring({
     from: { transform: 'translateY(-20px)', opacity: 0, scale: 0.95 },
     to: { transform: 'translateY(0px)', opacity: 1, scale: 1 },
