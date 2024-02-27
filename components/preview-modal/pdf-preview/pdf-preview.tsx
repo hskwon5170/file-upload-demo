@@ -56,16 +56,14 @@ export default function PdfPreview({
     >
       <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
         {Array.from(new Array(numPages), (el, idx) => (
-          <div key={idx + 1} className={`page_${idx + 1}`}>
+          <div key={idx + 1} className={`page_${idx + 1} my-2`}>
             {isPreview && <p className="text-white">{idx + 1}</p>}
+
             <Page
-              className={`cursor-pointer ${idx === selectedPage - 1 && isPreview ? 'border-4 border-blue-500' : ''} ${!isPreview ? 'my-10' : ''}`}
+              className={`cursor-pointer ${idx === selectedPage - 1 && isPreview ? 'border-4 border-blue-500' : 'border-4 border-[#2e2e2f]'} ${!isPreview ? 'my-10' : ''}`}
               pageNumber={idx + 1}
               height={size}
               onClick={() => isPreview && setSelectedPage(idx + 1)}
-              customTextRenderer={({ str, itemIndex }) => (
-                <span key={itemIndex}>{str}</span>
-              )}
             />
           </div>
         ))}
