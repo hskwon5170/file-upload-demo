@@ -7,6 +7,7 @@ import { FaCrown } from 'react-icons/fa6';
 import { BiSolidFileJpg } from 'react-icons/bi';
 import { BiSolidFilePng } from 'react-icons/bi';
 import { BiSolidFilePdf } from 'react-icons/bi';
+import LoadingSpinner from '@/components/loading-spinner/loading-spinner';
 
 type Props = {
   file: FileWithProgress;
@@ -78,7 +79,7 @@ const StatusIcon = ({
         </div>
       )}
 
-      {progress < 100 && !isError && <Spinner />}
+      {progress < 100 && !isError && <LoadingSpinner />}
 
       {isError && (
         <div className="flex items-center justify-center w-5 h-5 font-extrabold bg-red-500 rounded-full p-1">
@@ -109,16 +110,6 @@ const ConvertBytes = (bytes: number) => {
   } else {
     return (bytes / 1024).toFixed(2) + 'KB';
   }
-};
-
-const Spinner = () => {
-  return (
-    <div
-      className="animate-spin inline-block w-5 h-5 border-[3px] border-current border-t-transparent text-gray-400 rounded-full"
-      role="status"
-      aria-label="loading"
-    />
-  );
 };
 
 // jpg, png, pdf

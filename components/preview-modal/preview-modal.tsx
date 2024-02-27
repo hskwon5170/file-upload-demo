@@ -1,8 +1,4 @@
-import styles from './preview-modal.module.css';
-import PdfViewer from './pdf-preview/pdf-preview';
 import PreviewModalHeader from './preview-modal-header/preview-modal-header';
-import PdfPreview from './pdf-preview/pdf-preview';
-import PdfZoomed from './pdf-zoomed/pdf-zoomed';
 import PreviewModalContents from './preview-modal-contents/preview-modal-contents';
 
 type Root = {
@@ -47,7 +43,7 @@ export default function PreviewModal({ data }: Root) {
 
   return (
     <>
-      <div className="bg-black bg-opacity-80 fixed z-10 left-0 top-0 w-screen h-screen flex justify-center">
+      <div className="bg-black bg-opacity-100 fixed z-10 left-0 top-0 w-screen h-screen flex justify-center">
         <div className="relative w-screen h-screen">
           <PreviewModalHeader title={originalName} />
           <PreviewModalContents />
