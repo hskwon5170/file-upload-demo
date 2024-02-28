@@ -2,16 +2,19 @@ type Props = {
   className?: string;
   children: React.ReactNode;
   onClick?: () => void;
+  isLoading?: boolean;
 };
 export default function Button({
   className,
   children,
   onClick = () => {},
+  isLoading = false,
 }: Props) {
   return (
     <button
+      disabled={isLoading}
       onClick={onClick}
-      className={`${className} flex-1 h-10 rounded-xl p-3 flex items-center justify-center shadow-lg border`}
+      className={`${className} ${isLoading ? 'bg-gray-500 bg-opacity-30' : null} flex-1 h-10 rounded-xl p-3 flex items-center justify-center shadow-lg border`}
     >
       {children}
     </button>
