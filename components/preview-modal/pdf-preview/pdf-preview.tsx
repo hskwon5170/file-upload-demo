@@ -1,4 +1,10 @@
-import { SetStateAction, useState, useEffect, useRef } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useState,
+  useEffect,
+  useRef,
+} from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
@@ -6,13 +12,13 @@ import styles from '../preview-modal.module.css';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-interface Props {
+type Props = {
   file: string;
   size?: number;
   isPreview?: boolean;
   selectedPage: number;
-  setSelectedPage: React.Dispatch<SetStateAction<number>>;
-}
+  setSelectedPage: Dispatch<SetStateAction<number>>;
+};
 
 export default function PdfPreview({
   file,
@@ -21,24 +27,23 @@ export default function PdfPreview({
   selectedPage,
   setSelectedPage,
 }: Props) {
-  const [numPages, setNumPages] = useState(0);
+  console.log('selectedPage', selectedPage);
+
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const [numPages, setNumPages] = useState(0); // pdf 파일 총 페이지 수 onLoad시 저장
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
   }
 
   useEffect(() => {
-    if (!isPreview && containerRef.current) {
-      const currentPage = containerRef.current.querySelector(
-        `[data-page-number="${selectedPage}"]`,
-      );
-      if (currentPage) {
-        currentPage.scrollIntoView({
-          block: 'center',
-        });
-      }
-    }
-  }, [selectedPage, isPreview]);
+    const currentPage = containerRef.current?.querySelector(
+      `[data-page-number="${selectedPage}"]`,
+    );
+    currentPage?.scrollIntoView({
+      block: 'center',
+    });
+  }, [isPreview, selectedPage]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -48,16 +53,14 @@ export default function PdfPreview({
             const pageNumber = parseInt(
               entry.target.getAttribute('data-page-number') || '1',
             );
-            console.log('pageNumber', pageNumber);
             !isPreview && setSelectedPage(pageNumber);
           }
         });
       },
-      { root: containerRef.current, threshold: 0.9 },
+      { threshold: 1 },
     );
-
     const pages = containerRef.current?.querySelectorAll('.pdfpage');
-    pages && pages.forEach((page) => page && observer.observe(page));
+    pages?.forEach((page) => observer.observe(page));
 
     return () => observer.disconnect();
   }, [isPreview, setSelectedPage, numPages]);
