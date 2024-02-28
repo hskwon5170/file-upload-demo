@@ -3,7 +3,6 @@ import useHandleFile from '@/hooks/useHandleFile';
 import useUpload from '@/hooks/useUpload';
 import type { FileWithProgress } from '@/types/files';
 import { DragEvent, useState, useEffect } from 'react';
-import FileDragActivePannel from '../file-element/file-drag-active-pannel/file-drag-active.pannel';
 import EntireDropzonePannel from './entire-dropzone-pannel';
 import { useSetAtom } from 'jotai';
 import { closeAtom } from '@/atom/files';

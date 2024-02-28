@@ -27,14 +27,25 @@ export default function PdfPreview({
   selectedPage,
   setSelectedPage,
 }: Props) {
-  console.log('selectedPage', selectedPage);
-
   const containerRef = useRef<HTMLDivElement>(null);
-
+  const [isScroll, setIsScroll] = useState(false);
   const [numPages, setNumPages] = useState(0); // pdf 파일 총 페이지 수 onLoad시 저장
-  function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
+  const onDocumentLoadSuccess = ({
+    numPages,
+  }: {
+    numPages: number;
+  }) => {
     setNumPages(numPages);
-  }
+  };
+
+  const handleScroll = () => {
+    setIsScroll(true);
+  };
+
+  useEffect(() => {
+    const container = containerRef.current;
+    container?.addEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const currentPage = containerRef.current?.querySelector(
@@ -48,14 +59,18 @@ export default function PdfPreview({
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const pageNumber = parseInt(
-              entry.target.getAttribute('data-page-number') || '1',
-            );
-            !isPreview && setSelectedPage(pageNumber);
-          }
-        });
+        // console.log('entries', entries);
+        if (isScroll) {
+          entries.forEach((entry) => {
+            if (
+              entry.isIntersecting &&
+              entry.target instanceof HTMLElement
+            ) {
+              const pageNumber = entry.target.dataset.pageNumber;
+              !isPreview && setSelectedPage(Number(pageNumber));
+            }
+          });
+        }
       },
       { threshold: 1 },
     );
@@ -63,7 +78,7 @@ export default function PdfPreview({
     pages?.forEach((page) => observer.observe(page));
 
     return () => observer.disconnect();
-  }, [isPreview, setSelectedPage, numPages]);
+  }, [isPreview, setSelectedPage, numPages, isScroll]);
 
   return (
     <div
@@ -77,9 +92,13 @@ export default function PdfPreview({
         loading=""
       >
         {Array.from(new Array(numPages), (el, idx) => (
-          <div key={idx + 1} className={`page_${idx + 1} my-2`}>
-            {isPreview && <p className="text-white">{idx + 1}</p>}
-
+          <div
+            key={idx + 1}
+            className={`page_${idx + 1} ${idx !== 0 && isPreview && 'my-10'}`}
+          >
+            {isPreview && (
+              <p className="text-white font-bold">{idx + 1}</p>
+            )}
             <Page
               className={`${idx === selectedPage - 1 && isPreview ? 'border-4 border-blue-500' : 'border-4 border-[#2e2e2f]'} ${!isPreview ? 'my-10' : null} cursor-pointer pdfpage`}
               pageNumber={idx + 1}
