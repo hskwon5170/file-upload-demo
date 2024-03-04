@@ -28,6 +28,8 @@ export default function PdfPreview({
   const containerRef = useRef<HTMLDivElement>(null);
   const [isScroll, setIsScroll] = useState(false);
   const [numPages, setNumPages] = useState(0); // pdf 파일 총 페이지 수 onLoad시 저장
+  const [pageRendered, setPageRendered] = useState(Array(numPages).fill(false));
+  console.log('pageRendered', pageRendered);
 
   const [pageLoaded, setPageLoaded] = useState(false);
 
@@ -37,6 +39,11 @@ export default function PdfPreview({
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
+    setPageRendered(Array(numPages).fill(false));
+  };
+
+  const handlePageRenderSuccess = (pageIndex: number) => {
+    setPageRendered((prevState) => prevState.map((item, index) => (index === pageIndex ? true : item)));
   };
 
   useEffect(() => {
@@ -95,35 +102,38 @@ export default function PdfPreview({
     <div
       id="scrollArea"
       ref={containerRef}
-      className={`${styles['image-zone']} ${isOcrPage ? '' : 'overflow-y-auto'} flex flex-col items-center max-h-[80vh]  pr-6 py-5`}
+      className={`${styles['image-zone']} ${isOcrPage ? '' : 'overflow-y-auto'} flex flex-col items-center max-h-[80vh] pr-6 py-5`}
     >
       <Document file={file} onLoadSuccess={onDocumentLoadSuccess} loading="">
         {isOcrPage ? (
           <Page pageNumber={selectedPage} />
         ) : (
           <>
-            {Array.from(new Array(numPages), (el, idx) => {
-              {
-                !pageLoaded && <LoadingSpinner />;
-              }
-
-              return (
-                <div key={idx + 1} className={`page_${idx + 1} ${idx !== 0 && isPreview && 'my-10'}`}>
-                  {isPreview && <p className="text-white font-bold">{idx + 1}</p>}
-                  <Page
-                    className={`${idx === selectedPage - 1 && isPreview ? 'border-4 border-blue-500' : 'border-4 border-[#2e2e2f]'} ${!isPreview ? 'my-10' : null} cursor-pointer pdfpage`}
-                    pageNumber={idx + 1}
-                    height={size}
-                    onClick={() => isPreview && setSelectedPage?.(idx + 1)}
-                    renderAnnotationLayer={false}
-                    renderTextLayer={false}
-                    scale={1.2}
-                    loading=""
-                    onLoadSuccess={() => setPageLoaded(true)}
-                  />
-                </div>
-              );
-            })}
+            {Array.from(new Array(numPages), (el, idx) => (
+              <div key={idx} className={`relative ${idx !== 0 && isPreview ? 'my-10' : ''}`}>
+                {isPreview && <p className="text-white font-bold z-10">{idx + 1}</p>}
+                {!pageRendered[idx] && (
+                  <div className="absolute inset-0 flex justify-center items-center z-50">
+                    <LoadingSpinner />
+                  </div>
+                )}
+                <Page
+                  className={`${
+                    idx === selectedPage - 1 && isPreview
+                      ? 'border-4 border-blue-500'
+                      : 'border-4 border-[#2e2e2f]'
+                  } cursor-pointer pdfpage`}
+                  pageNumber={idx + 1}
+                  height={size}
+                  onClick={() => isPreview && setSelectedPage?.(idx + 1)}
+                  renderAnnotationLayer={false}
+                  renderTextLayer={false}
+                  scale={1.2}
+                  loading=""
+                  onRenderSuccess={() => handlePageRenderSuccess(idx)}
+                />
+              </div>
+            ))}
           </>
         )}
       </Document>
