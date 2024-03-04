@@ -42,7 +42,7 @@ export default function RootLayout({
           </div>
 
           <div className="fixed top-0 left-[200px] right-[200px] flex flex-col h-screen">
-            <div className="p-4 text-white bg-gray-500 z-10">
+            <div className="p-4 text-white bg-green-500 z-10">
               Header
             </div>
             <div className="overflow-y-auto flex-1">{children}</div>

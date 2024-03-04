@@ -9,6 +9,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import styles from '../preview-modal.module.css';
+import LoadingSpinner from '@/components/loading-spinner/loading-spinner';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -17,7 +18,8 @@ type Props = {
   size?: number;
   isPreview?: boolean;
   selectedPage: number;
-  setSelectedPage: Dispatch<SetStateAction<number>>;
+  setSelectedPage?: Dispatch<SetStateAction<number>>;
+  isOcrPage?: boolean;
 };
 
 export default function PdfPreview({
@@ -26,10 +28,18 @@ export default function PdfPreview({
   isPreview = false,
   selectedPage,
   setSelectedPage,
+  isOcrPage = false,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isScroll, setIsScroll] = useState(false);
   const [numPages, setNumPages] = useState(0); // pdf 파일 총 페이지 수 onLoad시 저장
+
+  const [pageLoaded, setPageLoaded] = useState(false);
+
+  useEffect(() => {
+    setPageLoaded(false);
+  }, [setPageLoaded]);
+
   const onDocumentLoadSuccess = ({
     numPages,
   }: {
@@ -42,10 +52,10 @@ export default function PdfPreview({
     setIsScroll(true);
   };
 
-  useEffect(() => {
-    const container = containerRef.current;
-    container?.addEventListener('scroll', handleScroll);
-  }, []);
+  // useEffect(() => {
+  //   const container = containerRef.current;
+  //   container?.addEventListener('scroll', handleScroll);
+  // }, []);
 
   useEffect(() => {
     const currentPage = containerRef.current?.querySelector(
@@ -57,6 +67,9 @@ export default function PdfPreview({
   }, [isPreview, selectedPage]);
 
   useEffect(() => {
+    const container = containerRef.current;
+    container?.addEventListener('scroll', handleScroll);
+
     const observer = new IntersectionObserver(
       (entries) => {
         // console.log('entries', entries);
@@ -67,7 +80,7 @@ export default function PdfPreview({
               entry.target instanceof HTMLElement
             ) {
               const pageNumber = entry.target.dataset.pageNumber;
-              !isPreview && setSelectedPage(Number(pageNumber));
+              !isPreview && setSelectedPage?.(Number(pageNumber));
             }
           });
         }
@@ -77,40 +90,59 @@ export default function PdfPreview({
     const pages = containerRef.current?.querySelectorAll('.pdfpage');
     pages?.forEach((page) => observer.observe(page));
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      container?.removeEventListener('scroll', handleScroll);
+    };
   }, [isPreview, setSelectedPage, numPages, isScroll]);
 
   return (
     <div
       id="scrollArea"
       ref={containerRef}
-      className={`${styles['image-zone']} flex flex-col items-center max-h-[80vh] overflow-y-auto pr-6 py-5`}
+      className={`${styles['image-zone']} ${isOcrPage ? '' : 'overflow-y-auto'} flex flex-col items-center max-h-[80vh]  pr-6 py-5`}
     >
       <Document
         file={file}
         onLoadSuccess={onDocumentLoadSuccess}
         loading=""
       >
-        {Array.from(new Array(numPages), (el, idx) => (
-          <div
-            key={idx + 1}
-            className={`page_${idx + 1} ${idx !== 0 && isPreview && 'my-10'}`}
-          >
-            {isPreview && (
-              <p className="text-white font-bold">{idx + 1}</p>
-            )}
-            <Page
-              className={`${idx === selectedPage - 1 && isPreview ? 'border-4 border-blue-500' : 'border-4 border-[#2e2e2f]'} ${!isPreview ? 'my-10' : null} cursor-pointer pdfpage`}
-              pageNumber={idx + 1}
-              height={size}
-              onClick={() => isPreview && setSelectedPage(idx + 1)}
-              renderAnnotationLayer={false}
-              renderTextLayer={false}
-              scale={1.2}
-              loading=""
-            />
-          </div>
-        ))}
+        {isOcrPage ? (
+          <Page pageNumber={selectedPage} />
+        ) : (
+          <>
+            {/* {!pageLoaded && <LoadingSpinner />} */}
+            {Array.from(new Array(numPages), (el, idx) => {
+              {
+                !pageLoaded && <LoadingSpinner />;
+              }
+
+              return (
+                <div
+                  key={idx + 1}
+                  className={`page_${idx + 1} ${idx !== 0 && isPreview && 'my-10'}`}
+                >
+                  {isPreview && (
+                    <p className="text-white font-bold">{idx + 1}</p>
+                  )}
+                  <Page
+                    className={`${idx === selectedPage - 1 && isPreview ? 'border-4 border-blue-500' : 'border-4 border-[#2e2e2f]'} ${!isPreview ? 'my-10' : null} cursor-pointer pdfpage`}
+                    pageNumber={idx + 1}
+                    height={size}
+                    onClick={() =>
+                      isPreview && setSelectedPage?.(idx + 1)
+                    }
+                    renderAnnotationLayer={false}
+                    renderTextLayer={false}
+                    scale={1.2}
+                    loading=""
+                    onLoadSuccess={() => setPageLoaded(true)}
+                  />
+                </div>
+              );
+            })}
+          </>
+        )}
       </Document>
     </div>
   );
