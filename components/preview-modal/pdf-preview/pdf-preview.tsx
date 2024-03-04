@@ -1,10 +1,4 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useState,
-  useEffect,
-  useRef,
-} from 'react';
+import { Dispatch, SetStateAction, useState, useEffect, useRef } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
@@ -30,6 +24,7 @@ export default function PdfPreview({
   setSelectedPage,
   isOcrPage = false,
 }: Props) {
+  console.log('selectedPage...', selectedPage);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isScroll, setIsScroll] = useState(false);
   const [numPages, setNumPages] = useState(0); // pdf 파일 총 페이지 수 onLoad시 저장
@@ -40,59 +35,59 @@ export default function PdfPreview({
     setPageLoaded(false);
   }, [setPageLoaded]);
 
-  const onDocumentLoadSuccess = ({
-    numPages,
-  }: {
-    numPages: number;
-  }) => {
+  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
   };
 
-  const handleScroll = () => {
-    setIsScroll(true);
-  };
+  useEffect(() => {
+    let scrollTimeout: NodeJS.Timeout;
+    const container = containerRef.current;
 
-  // useEffect(() => {
-  //   const container = containerRef.current;
-  //   container?.addEventListener('scroll', handleScroll);
-  // }, []);
+    const handleScroll = () => {
+      setIsScroll(true);
+
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        setIsScroll(false);
+      }, 150);
+    };
+
+    container?.addEventListener('scroll', handleScroll);
+
+    return () => {
+      container?.removeEventListener('scroll', handleScroll);
+      clearTimeout(scrollTimeout);
+    };
+  }, []);
 
   useEffect(() => {
-    const currentPage = containerRef.current?.querySelector(
-      `[data-page-number="${selectedPage}"]`,
-    );
+    const currentPage = containerRef.current?.querySelector(`[data-page-number="${selectedPage}"]`);
     currentPage?.scrollIntoView({
-      block: 'center',
+      // block: 'center',
+      block: isPreview ? 'center' : 'start',
     });
   }, [isPreview, selectedPage]);
 
   useEffect(() => {
-    const container = containerRef.current;
-    container?.addEventListener('scroll', handleScroll);
-
     const observer = new IntersectionObserver(
       (entries) => {
         // console.log('entries', entries);
-        if (isScroll) {
+        if (isScroll && !isPreview) {
           entries.forEach((entry) => {
-            if (
-              entry.isIntersecting &&
-              entry.target instanceof HTMLElement
-            ) {
+            if (entry.isIntersecting && entry.target instanceof HTMLElement) {
               const pageNumber = entry.target.dataset.pageNumber;
               !isPreview && setSelectedPage?.(Number(pageNumber));
             }
           });
         }
       },
-      { threshold: 1 },
+      { threshold: 0.7 },
     );
     const pages = containerRef.current?.querySelectorAll('.pdfpage');
     pages?.forEach((page) => observer.observe(page));
 
     return () => {
       observer.disconnect();
-      container?.removeEventListener('scroll', handleScroll);
     };
   }, [isPreview, setSelectedPage, numPages, isScroll]);
 
@@ -102,36 +97,24 @@ export default function PdfPreview({
       ref={containerRef}
       className={`${styles['image-zone']} ${isOcrPage ? '' : 'overflow-y-auto'} flex flex-col items-center max-h-[80vh]  pr-6 py-5`}
     >
-      <Document
-        file={file}
-        onLoadSuccess={onDocumentLoadSuccess}
-        loading=""
-      >
+      <Document file={file} onLoadSuccess={onDocumentLoadSuccess} loading="">
         {isOcrPage ? (
           <Page pageNumber={selectedPage} />
         ) : (
           <>
-            {/* {!pageLoaded && <LoadingSpinner />} */}
             {Array.from(new Array(numPages), (el, idx) => {
               {
                 !pageLoaded && <LoadingSpinner />;
               }
 
               return (
-                <div
-                  key={idx + 1}
-                  className={`page_${idx + 1} ${idx !== 0 && isPreview && 'my-10'}`}
-                >
-                  {isPreview && (
-                    <p className="text-white font-bold">{idx + 1}</p>
-                  )}
+                <div key={idx + 1} className={`page_${idx + 1} ${idx !== 0 && isPreview && 'my-10'}`}>
+                  {isPreview && <p className="text-white font-bold">{idx + 1}</p>}
                   <Page
                     className={`${idx === selectedPage - 1 && isPreview ? 'border-4 border-blue-500' : 'border-4 border-[#2e2e2f]'} ${!isPreview ? 'my-10' : null} cursor-pointer pdfpage`}
                     pageNumber={idx + 1}
                     height={size}
-                    onClick={() =>
-                      isPreview && setSelectedPage?.(idx + 1)
-                    }
+                    onClick={() => isPreview && setSelectedPage?.(idx + 1)}
                     renderAnnotationLayer={false}
                     renderTextLayer={false}
                     scale={1.2}
