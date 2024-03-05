@@ -21,9 +21,7 @@ export default function PdfViewer({ file, selectedPage, onChange }: Props) {
 
   useEffect(() => {
     const currentPage = containerRef.current?.querySelector(`[data-page-number="${selectedPage}"]`);
-    currentPage?.scrollIntoView({
-      block: 'center',
-    });
+    currentPage?.scrollIntoView({ behavior: 'smooth' });
   }, [selectedPage]);
 
   useEffect(() => {
@@ -77,7 +75,11 @@ export default function PdfViewer({ file, selectedPage, onChange }: Props) {
     >
       <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
         {Array.from(new Array(numPages), (_, idx) => (
-          <div key={idx} className="relative my-10 flex justify-center items-center">
+          <div
+            style={{ marginBottom: '100px' }}
+            key={idx}
+            className="relative flex justify-center items-center"
+          >
             {!pageRendered[idx] && (
               <div className="absolute inset-0 flex justify-center items-center z-50">
                 <LoadingSpinner large />
