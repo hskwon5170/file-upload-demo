@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function PdfThumbnails({ file, onClick, selectedPage }: Props) {
-  const { numPages, pageRendered, onDocumentLoadSuccess, handlePageRenderSuccess } = useLoadPdf();
+  const { numPages, pdfLoadedStatus, onDocumentLoadSuccess, handlePageRenderSuccess } = useLoadPdf();
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -21,6 +21,9 @@ export default function PdfThumbnails({ file, onClick, selectedPage }: Props) {
       block: 'center',
     });
   }, [selectedPage]);
+
+  const allPageLoaded = pdfLoadedStatus.every((status) => status);
+
   return (
     <div
       ref={containerRef}
@@ -31,7 +34,7 @@ export default function PdfThumbnails({ file, onClick, selectedPage }: Props) {
           <div key={idx}>
             <p className="text-white font-bold my-3">{idx + 1}</p>
             <div className="my-3 relative flex justify-center items-center">
-              {!pageRendered[idx] && (
+              {!allPageLoaded && (
                 <div className="absolute inset-0 flex justify-center items-center z-50">
                   <LoadingSpinner />
                 </div>

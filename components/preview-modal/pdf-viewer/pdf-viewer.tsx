@@ -11,14 +11,14 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 type Props = {
   file: string;
   selectedPage: number;
-  onChange: (page: number) => void;
+  onChange?: (page: number) => void;
+  isOcrAction: boolean;
 };
 
-export default function PdfViewer({ file, selectedPage, onChange }: Props) {
-  const { numPages, pageRendered, onDocumentLoadSuccess, handlePageRenderSuccess } = useLoadPdf();
+export default function PdfViewer({ file, selectedPage, onChange, isOcrAction }: Props) {
+  const { numPages, pdfLoadedStatus, onDocumentLoadSuccess, handlePageRenderSuccess } = useLoadPdf();
   const [isScroll, setIsScroll] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const currentPage = containerRef.current?.querySelector(`[data-page-number="${selectedPage}"]`);
     currentPage?.scrollIntoView();
@@ -53,7 +53,7 @@ export default function PdfViewer({ file, selectedPage, onChange }: Props) {
           entries.forEach((entry) => {
             if (entry.isIntersecting && entry.target instanceof HTMLElement) {
               const pageNumber = entry.target.dataset.pageNumber;
-              onChange(Number(pageNumber));
+              onChange && onChange(Number(pageNumber));
             }
           });
         }
@@ -68,35 +68,39 @@ export default function PdfViewer({ file, selectedPage, onChange }: Props) {
     };
   }, [numPages, isScroll, onChange]);
 
+  const allPageLoaded = pdfLoadedStatus.every((status) => status);
+
   return (
-    <div
-      ref={containerRef}
-      className={`${styles['image-zone']} overflow-y-auto flex flex-col items-center max-h-[80vh] pr-6 py-5`}
-    >
-      <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
-        {Array.from(new Array(numPages), (_, idx) => (
-          <div
-            style={{ marginBottom: '100px' }}
-            key={idx}
-            className="relative flex justify-center items-center"
-          >
-            {!pageRendered[idx] && (
-              <div className="absolute inset-0 flex justify-center items-center z-50">
-                <LoadingSpinner large />
-              </div>
-            )}
-            <Page
-              className={'cursor-pointer pdfpage'}
-              height={600}
-              renderAnnotationLayer={false}
-              renderTextLayer={false}
-              pageNumber={idx + 1}
-              loading={<></>}
-              onRenderSuccess={() => handlePageRenderSuccess(idx)}
-            />
-          </div>
-        ))}
-      </Document>
-    </div>
+    <>
+      <div
+        ref={containerRef}
+        className={`${styles['image-zone']} ${isOcrAction ? 'p-0 justify-center bg-red-100 h-screen' : ''} overflow-y-auto flex flex-col items-center max-h-[80vh] pr-6 py-5`}
+      >
+        <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
+          {Array.from(new Array(isOcrAction ? 1 : numPages), (_, idx) => (
+            <div
+              style={{ marginBottom: '100px' }}
+              key={idx}
+              className="relative flex justify-center items-center"
+            >
+              {!allPageLoaded && (
+                <div className="absolute inset-0 flex justify-center items-center z-50">
+                  <LoadingSpinner large />
+                </div>
+              )}
+              <Page
+                className={'cursor-pointer pdfpage'}
+                height={isOcrAction ? 300 : 600}
+                renderAnnotationLayer={false}
+                renderTextLayer={false}
+                pageNumber={isOcrAction ? selectedPage : idx + 1}
+                loading={<></>}
+                onRenderSuccess={() => handlePageRenderSuccess(idx)}
+              />
+            </div>
+          ))}
+        </Document>
+      </div>
+    </>
   );
 }
