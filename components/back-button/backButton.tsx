@@ -1,13 +1,14 @@
 'use client';
 
-import { ocrActionAtom } from '@/atom/pdf-viewer';
-import { useAtom } from 'jotai';
+import { ocrActionAtom, selectedPageAtom } from '@/atom/pdf-viewer';
+import { useSetAtom } from 'jotai';
 import { useRouter } from 'next/navigation';
 import { IoMdClose } from 'react-icons/io';
 
 export default function BackButton() {
   const router = useRouter();
-  const [isOcrAction, setIsOcrAction] = useAtom(ocrActionAtom);
+  const setIsOcrAction = useSetAtom(ocrActionAtom);
+  const setSelectedPage = useSetAtom(selectedPageAtom);
 
   return (
     <button
@@ -15,6 +16,7 @@ export default function BackButton() {
       onClick={() => {
         router.back();
         setIsOcrAction(false);
+        setSelectedPage(1);
       }}
     >
       <IoMdClose />

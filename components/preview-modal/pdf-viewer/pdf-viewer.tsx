@@ -2,8 +2,8 @@ import { useRef, useEffect, useState } from 'react';
 import useLoadPdf from '@/hooks/useLoadPdf';
 import { Document, Page, pdfjs } from 'react-pdf';
 import styles from './../preview-modal.module.css';
+import 'react-pdf/dist/esm/Page/TextLayer.css';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
 import LoadingSpinner from '@/components/loading-spinner/loading-spinner';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -19,9 +19,12 @@ export default function PdfViewer({ file, selectedPage, onChange, isOcrAction }:
   const { numPages, pdfLoadedStatus, onDocumentLoadSuccess, handlePageRenderSuccess } = useLoadPdf();
   const [isScroll, setIsScroll] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const currentPage = containerRef.current?.querySelector(`[data-page-number="${selectedPage}"]`);
-    currentPage?.scrollIntoView();
+    currentPage?.scrollIntoView({
+      block: 'center',
+    });
   }, [selectedPage]);
 
   useEffect(() => {
@@ -69,21 +72,24 @@ export default function PdfViewer({ file, selectedPage, onChange, isOcrAction }:
   }, [numPages, isScroll, onChange]);
 
   const allPageLoaded = pdfLoadedStatus.every((status) => status);
+  useEffect(() => {
+    console.log('Selected Page Changed:', selectedPage);
+  }, [selectedPage]);
 
   return (
     <>
       <div
         ref={containerRef}
-        className={`${styles['image-zone']} ${isOcrAction ? 'p-0 justify-center bg-red-100 h-screen' : ''} overflow-y-auto flex flex-col items-center max-h-[80vh] pr-6 py-5`}
+        className={`${styles['image-zone']} ${isOcrAction ? 'pr-0 py-0 bg-gray-100 h-full flex justify-center items-center' : 'pr-6 py-5 overflow-y-auto flex flex-col items-center max-h-[80vh] '} `}
       >
-        <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
+        <Document file={file} onLoadSuccess={onDocumentLoadSuccess} loading={<></>}>
           {Array.from(new Array(isOcrAction ? 1 : numPages), (_, idx) => (
             <div
-              style={{ marginBottom: '100px' }}
+              style={{ marginBottom: isOcrAction ? '0px' : '100px' }}
               key={idx}
               className="relative flex justify-center items-center"
             >
-              {!allPageLoaded && (
+              {!isOcrAction && !allPageLoaded && (
                 <div className="absolute inset-0 flex justify-center items-center z-50">
                   <LoadingSpinner large />
                 </div>
@@ -94,6 +100,7 @@ export default function PdfViewer({ file, selectedPage, onChange, isOcrAction }:
                 renderAnnotationLayer={false}
                 renderTextLayer={false}
                 pageNumber={isOcrAction ? selectedPage : idx + 1}
+                // pageNumber={selectedPage}
                 loading={<></>}
                 onRenderSuccess={() => handlePageRenderSuccess(idx)}
               />
