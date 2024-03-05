@@ -24,12 +24,10 @@ export default function PdfPreview({
   setSelectedPage,
   isOcrPage = false,
 }: Props) {
-  console.log('selectedPage...', selectedPage);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isScroll, setIsScroll] = useState(false);
   const [numPages, setNumPages] = useState(0); // pdf 파일 총 페이지 수 onLoad시 저장
   const [pageRendered, setPageRendered] = useState(Array(numPages).fill(false));
-  console.log('pageRendered', pageRendered);
 
   const [pageLoaded, setPageLoaded] = useState(false);
 
@@ -104,7 +102,7 @@ export default function PdfPreview({
       ref={containerRef}
       className={`${styles['image-zone']} ${isOcrPage ? '' : 'overflow-y-auto'} flex flex-col items-center max-h-[80vh] pr-6 py-5`}
     >
-      <Document file={file} onLoadSuccess={onDocumentLoadSuccess} loading="">
+      <Document file={file} onLoadSuccess={onDocumentLoadSuccess} loading={<></>}>
         {isOcrPage ? (
           <Page pageNumber={selectedPage} />
         ) : (
@@ -129,7 +127,7 @@ export default function PdfPreview({
                   renderAnnotationLayer={false}
                   renderTextLayer={false}
                   scale={1.2}
-                  loading=""
+                  loading={<></>}
                   onRenderSuccess={() => handlePageRenderSuccess(idx)}
                 />
               </div>
