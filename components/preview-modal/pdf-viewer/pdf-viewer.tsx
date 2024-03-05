@@ -21,7 +21,7 @@ export default function PdfViewer({ file, selectedPage, onChange }: Props) {
 
   useEffect(() => {
     const currentPage = containerRef.current?.querySelector(`[data-page-number="${selectedPage}"]`);
-    currentPage?.scrollIntoView({ behavior: 'smooth' });
+    currentPage?.scrollIntoView();
   }, [selectedPage]);
 
   useEffect(() => {
