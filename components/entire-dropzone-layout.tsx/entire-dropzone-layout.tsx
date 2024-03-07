@@ -12,7 +12,7 @@ type Props = {
 };
 
 export default function EntireDropzoneLayout({ children }: Props) {
-  const { UploadFile } = useUpload();
+  const { UploadFile, handleTaskGroup } = useUpload();
   const { handleFile } = useHandleFile();
   const [dragActive, setDragActive] = useState(false);
   const [dragCounter, setDragCounter] = useState(0);
@@ -36,6 +36,7 @@ export default function EntireDropzoneLayout({ children }: Props) {
 
     for (const newFile of Array.from(e.dataTransfer.files)) {
       const handledFile = await handleFile(newFile);
+      console.log('handledFile', handledFile);
       UploadFile(handledFile as FileWithProgress);
     }
   };
