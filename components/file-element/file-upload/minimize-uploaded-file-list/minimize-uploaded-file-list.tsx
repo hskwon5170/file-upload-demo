@@ -18,7 +18,7 @@ export default function MinimizeUploadedFileList() {
 
   return (
     <div
-      className="h-[80px] w-[500px] bg-blue-600 rounded-xl border cursor-pointer flex items-center"
+      className="h-[80px] w-[500px] bg-[#5347cf] rounded-xl border cursor-pointer flex items-center"
       onClick={() => setMinimize(!minimize)}
     >
       <div className="flex w-full px-4 text-white">

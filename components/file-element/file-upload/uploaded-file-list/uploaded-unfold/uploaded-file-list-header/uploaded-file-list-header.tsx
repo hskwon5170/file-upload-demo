@@ -27,11 +27,14 @@ export default function UploadedFileListHeader() {
     <div className="flex flex-col items-center w-full px-6">
       <div className="flex items-center w-full px-3">
         <div className="flex-1">
-          <span className="font-extrabold text-blue-500">{uploadedSuccessFiles.length}</span>/ {files.length}개{' '}
-          <span className="font-extrabold">완료</span>
+          <span className="font-extrabold text-[#5347cf]">{uploadedSuccessFiles.length}</span>/{' '}
+          {files.length}개 <span className="font-extrabold">완료</span>
         </div>
         <div className="flex items-center gap-3">
-          <VscChromeMinimize className="cursor-pointer hover:bg-gray-100" onClick={() => setMinimize(true)} />
+          <VscChromeMinimize
+            className="cursor-pointer hover:bg-gray-100"
+            onClick={() => setMinimize(true)}
+          />
           <MdClose className="cursor-pointer hover:bg-gray-100" onClick={() => setClose(true)} />
         </div>
       </div>

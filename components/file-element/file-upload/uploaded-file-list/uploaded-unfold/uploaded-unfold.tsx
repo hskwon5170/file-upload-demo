@@ -1,19 +1,112 @@
 'use client';
 
+import { DragEvent, useEffect, useState } from 'react';
 import { fileAtom, fileExploreTriggerAtom } from '@/atom/files';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
+import type { FileWithProgress } from '@/types/files';
+
 import UploadedFileListHeader from './uploaded-file-list-header/uploaded-file-list-header';
 import FileCards from '@/components/file-element/file-card/file-card';
-import styles from './uploded-unfold.module.css';
 import Button from '../buttons/buttons';
-import { useState } from 'react';
 import SortFallback from './sort-fallback/sort-fallback';
 import UploadUnfoldLayout from './upload-unfold-layout';
 
+import '../uploaded-unfold/uploaded-unfold.css';
+import styles from './uploded-unfold.module.css';
+
+type Props = {
+  dragFrom: null | number;
+  dragTo: null | number;
+  originalOrder: FileWithProgress[];
+  updatedOrder: FileWithProgress[];
+};
+
 export default function UploadedUnfold() {
-  const files = useAtomValue(fileAtom);
+  const [files, setFiles] = useAtom(fileAtom);
   const setTrigger = useSetAtom(fileExploreTriggerAtom);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [dragAndDrop, setDragAndDrop] = useState<Props>({
+    dragFrom: null,
+    dragTo: null,
+    originalOrder: [],
+    updatedOrder: [],
+  });
+
+  const [dropTargetIndex, setDropTargetIndex] = useState<number | null>(null);
+  console.log('dropTargetIndex', dropTargetIndex);
+  const onDragStart = (e: DragEvent<HTMLLIElement>) => {
+    // console.log('객체를 드래그하려고 시작할때 발생');
+    e.currentTarget.style.opacity = '0.4';
+    // 들어올린 파일의 original 인덱스
+    const initialPosition = parseInt(e.currentTarget.dataset.position ?? '');
+    // console.log('이동시키려는 객체의 원래 인덱스', initialPosition);
+    setDragAndDrop((prev) => ({
+      ...prev,
+      dragFrom: initialPosition,
+      originalOrder: files,
+    }));
+  };
+
+  const onDragEnter = (e: DragEvent<HTMLLIElement>) => {
+    // console.log('마우스가 대상 객체 위로 처음 진입할때 발생');
+  };
+
+  const onDragOver = (e: DragEvent<HTMLLIElement>) => {
+    // console.log(' 드래그하면서 마우스가 대상 객체 위에 자리잡고있을때 발생');
+    e.preventDefault();
+    const overIndex = parseInt(e.currentTarget.dataset.position ?? '');
+    if (dropTargetIndex !== overIndex) {
+      setDropTargetIndex(overIndex);
+    }
+  };
+
+  const onDrop = (e: DragEvent<HTMLLIElement>) => {
+    e.preventDefault();
+
+    let newList = dragAndDrop.originalOrder;
+    const fromIndex = dragAndDrop.dragFrom;
+    const toIndex = parseInt(e.currentTarget.dataset.position ?? '');
+    setDropTargetIndex(null);
+    // console.log(' 드래그가 끝나서 드래그하던 객체를 놓는 장소에 위치한 객체에서 발생함', toIndex);
+
+    const itemDragged = newList[fromIndex as number];
+    const remainingItems = newList.filter((_, idx) => idx !== fromIndex);
+
+    newList = [...remainingItems.slice(0, toIndex), itemDragged, ...remainingItems.slice(toIndex)];
+    setFiles(newList);
+
+    if (toIndex !== dragAndDrop.dragTo) {
+      setDragAndDrop({
+        ...dragAndDrop,
+        updatedOrder: newList,
+        dragTo: toIndex,
+      });
+    }
+
+    setDragAndDrop({
+      dragFrom: null,
+      dragTo: null,
+      originalOrder: [],
+      updatedOrder: [],
+    });
+  };
+
+  const onDragLeave = (e: DragEvent<HTMLLIElement>) => {
+    e.preventDefault();
+    // console.log('드래그가 끝나서 마우스가 대상 객체의 위에서 벗어날때 발생함');
+    setDropTargetIndex(null);
+
+    setDragAndDrop({
+      ...dragAndDrop,
+      dragTo: 0,
+    });
+  };
+
+  const onDragEnd = (e: DragEvent<HTMLLIElement>) => {
+    e.currentTarget.style.opacity = '1';
+  };
+
   const handleSortButton = () => {
     setIsLoading(true);
 
@@ -32,7 +125,7 @@ export default function UploadedUnfold() {
       </section>
 
       <section
-        className={`w-full relative px-10 min-h-[300px] overflow-y-auto ${styles['list']}`}
+        className={`w-full relative px-4 min-h-[300px] overflow-y-auto overflow-x-hidden ${styles['list']}`}
         style={{
           maxHeight: `calc(100% - ${buttonSectionHeight} - 4rem)`,
         }}
@@ -46,10 +139,22 @@ export default function UploadedUnfold() {
           {files.map((file, idx) => {
             const standard = idx === 0;
             return (
-              <div key={file.id}>
-                <FileCards file={file} standard={standard} />
+              <li
+                id="drag-with-image"
+                key={file.id}
+                className="list-none draggable"
+                draggable={true}
+                data-position={idx}
+                onDragStart={onDragStart}
+                onDragOver={onDragOver}
+                onDragLeave={onDragLeave}
+                onDrop={onDrop}
+                onDragEnter={onDragEnter}
+                onDragEnd={onDragEnd}
+              >
+                <FileCards file={file} standard={standard} isDropTarget={idx === dropTargetIndex} />
                 {/* <span onClick={() => removeFile(file)}>x</span> */}
-              </div>
+              </li>
             );
           })}
         </>
@@ -72,7 +177,7 @@ export default function UploadedUnfold() {
             <Button
               isLoading={isLoading}
               onClick={handleSortButton}
-              className="text-white bg-blue-500"
+              className="text-white bg-[#5347cf]"
             >
               자동분류
             </Button>

@@ -8,17 +8,27 @@ import { BiSolidFileJpg } from 'react-icons/bi';
 import { BiSolidFilePng } from 'react-icons/bi';
 import { BiSolidFilePdf } from 'react-icons/bi';
 import LoadingSpinner from '@/components/loading-spinner/loading-spinner';
+import { useEffect, useRef, useState } from 'react';
 
 type Props = {
   file: FileWithProgress;
   standard: boolean;
+  isDropTarget?: boolean;
 };
 
-export default function FileCards({ file, standard }: Props) {
+export default function FileCards({ file, standard, isDropTarget }: Props) {
   const fileExtension = file.file?.type.split('/')[1];
+  const [target, setTarget] = useState(isDropTarget);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     isDropTarget && setTarget(!target);
+  //   }, 100);
+  // }, [isDropTarget, target]);
+
   const openSprings = useSpring({
-    from: { transform: 'translateY(-20px)', opacity: 0, scale: 0.95 },
-    to: { transform: 'translateY(0px)', opacity: 1, scale: 1 },
+    from: { transform: 'translateY(-20px)', opacity: 0, scale: 0.95, y: 15, rotate: -12 },
+    to: { transform: 'translateY(0px)', opacity: 1, scale: 1, y: 0, rotate: 0 },
     config: { duration: 300 },
   });
 
@@ -28,48 +38,46 @@ export default function FileCards({ file, standard }: Props) {
     delay: 150,
     config: { tension: 200, friction: 15 },
   });
+
+  const scaleAnimation = useSpring({
+    transform: isDropTarget ? 'scale(1.1)' : 'scale(1)',
+    // opacity: isDropTarget ? 0.5 : 1,
+    backgroundColor: isDropTarget ? '#f3e8ff' : '#ffffff',
+    config: { tension: 300, friction: 10 },
+  });
+
   return (
-    <animated.div
-      className="flex items-center w-full gap-5 my-3"
-      style={openSprings}
-    >
-      <CrownIcon standard={standard} />
-      <div className="flex items-center flex-1 w-72">
-        <animated.div
-          className="flex items-center justify-center p-2 bg-gray-100 rounded-lg w-12 h-12"
-          style={iconSprings}
-        >
-          <AiFillFile className="w-8 h-8 text-gray-600" />
-          {/* <FileIcon extension={fileExtension} /> */}
-        </animated.div>
-        <div className="p-2">
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col gap-2 p-2">
-              <div className="font-bold truncate max-w-60">
-                {file?.file.name}
-              </div>
-              <div className="text-[13px] text-gray-500">
-                {ConvertBytes(file?.file.size)}
+    <animated.div style={scaleAnimation}>
+      <animated.div
+        data-tooltip-id="my-tooltip"
+        className=" flex items-center w-full gap-5 my-3 cursor-pointer px-6  hover:bg-gray-100 duration-300 transition-all ease-in-out"
+        style={openSprings}
+      >
+        <CrownIcon standard={standard} />
+        <div className="flex items-center flex-1 w-72">
+          <animated.div
+            className="flex items-center justify-center p-2 bg-gray-100 rounded-lg w-12 h-12"
+            style={iconSprings}
+          >
+            <AiFillFile className="w-8 h-8 text-gray-600" />
+            {/* <FileIcon extension={fileExtension} /> */}
+          </animated.div>
+          <div className="p-2">
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-2 p-2">
+                <div className="font-bold truncate max-w-60">{file?.file.name}</div>
+                <div className="text-[13px] text-gray-500">{ConvertBytes(file?.file.size)}</div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <StatusIcon
-        progress={file?.progress ?? 0}
-        isError={file?.isError ?? false}
-      />
+        <StatusIcon progress={file?.progress ?? 0} isError={file?.isError ?? false} />
+      </animated.div>
     </animated.div>
   );
 }
 
-const StatusIcon = ({
-  progress,
-  isError,
-}: {
-  progress: number;
-  isError: boolean;
-}) => {
+const StatusIcon = ({ progress, isError }: { progress: number; isError: boolean }) => {
   return (
     <div className="flex items-center justify-center">
       {progress === 100 && (
