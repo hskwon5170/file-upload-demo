@@ -1,14 +1,15 @@
 import { AiFillFile } from 'react-icons/ai';
-import { FaCheck } from 'react-icons/fa';
 import { animated, useSpring } from '@react-spring/web';
-import { FaExclamation } from 'react-icons/fa6';
 import { FileWithProgress } from '@/types/files';
-import { FaCrown } from 'react-icons/fa6';
 import { BiSolidFileJpg } from 'react-icons/bi';
 import { BiSolidFilePng } from 'react-icons/bi';
 import { BiSolidFilePdf } from 'react-icons/bi';
-import LoadingSpinner from '@/components/loading-spinner/loading-spinner';
-import { useEffect, useRef, useState } from 'react';
+import { MdClose } from 'react-icons/md';
+import { CrownIcon, StatusIcon } from './file-card-icons/file-card-icons';
+import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
+import { useSetAtom } from 'jotai';
+import { removeFileAtom } from '@/atom/files';
+import { FaTrash } from 'react-icons/fa6';
 
 type Props = {
   file: FileWithProgress;
@@ -17,19 +18,22 @@ type Props = {
 };
 
 export default function FileCards({ file, standard, isDropTarget }: Props) {
-  const fileExtension = file.file?.type.split('/')[1];
-  const [target, setTarget] = useState(isDropTarget);
+  const removeFile = useSetAtom(removeFileAtom);
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     isDropTarget && setTarget(!target);
-  //   }, 100);
-  // }, [isDropTarget, target]);
+  const fileExtension = file.file?.type.split('/')[1];
+
+  // const openSprings = useSpring({
+  //   from: { opacity: 0.1, scale: 0.9, y: -20, rotate: -5 },
+  //   to: { opacity: 1, scale: 1, y: 0, rotate: 0 },
+  //   config: { duration: 300, tension: 200, friction: 15 },
+  //   // delay: 150,
+  // });
 
   const openSprings = useSpring({
-    from: { transform: 'translateY(-20px)', opacity: 0, scale: 0.95, y: 15, rotate: -12 },
-    to: { transform: 'translateY(0px)', opacity: 1, scale: 1, y: 0, rotate: 0 },
-    config: { duration: 300 },
+    from: { opacity: 0.05, scale: 0.9, x: -30 },
+    to: { opacity: 1, scale: 1, x: 0 },
+    config: { duration: 100, velocity: 10 },
+    delay: 150,
   });
 
   const iconSprings = useSpring({
@@ -42,21 +46,54 @@ export default function FileCards({ file, standard, isDropTarget }: Props) {
   const scaleAnimation = useSpring({
     transform: isDropTarget ? 'scale(1.1)' : 'scale(1)',
     // opacity: isDropTarget ? 0.5 : 1,
-    backgroundColor: isDropTarget ? '#f3e8ff' : '#ffffff',
-    config: { tension: 300, friction: 10 },
+    backgroundColor: isDropTarget ? '#F8F0FF' : '#ffffff',
+    // config: { tension: 300, friction: 10 },
+    // config: { tension: 120, friction: 14 },
+    config: { tension: 100, friction: 7 },
   });
+
+  const fileCardRef = useRef<HTMLDivElement>(null);
+
+  const [isHover, setIsHover] = useState(false);
+
+  const handleMouseOver = () => {
+    setIsHover(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHover(false);
+  };
+
+  useEffect(() => {
+    fileCardRef.current?.addEventListener('mouseover', handleMouseOver);
+    fileCardRef.current?.addEventListener('mouseout', handleMouseLeave);
+    return () => {
+      fileCardRef.current?.removeEventListener('mouseover', handleMouseOver);
+      fileCardRef.current?.removeEventListener('mouseout', handleMouseLeave);
+    };
+  }, [fileCardRef]);
 
   return (
     <animated.div style={scaleAnimation}>
       <animated.div
+        ref={fileCardRef}
         data-tooltip-id="my-tooltip"
-        className=" flex items-center w-full gap-5 my-3 cursor-pointer px-6  hover:bg-gray-100 duration-300 transition-all ease-in-out"
+        className=" flex items-center w-full h-12 gap-5 my-3 cursor-pointer  px-6  hover:bg-gray-100 duration-300 transition-all ease-in-out"
         style={openSprings}
       >
-        <CrownIcon standard={standard} />
+        <div className="w-2 flex items-center justify-center cursor-pointer">
+          {isHover ? (
+            <div onClick={() => removeFile(file)} className="text-gray-500">
+              <MdClose />
+            </div>
+          ) : (
+            <CrownIcon standard={standard} />
+          )}
+        </div>
+        {/* <CrownIcon standard={standard} /> */}
         <div className="flex items-center flex-1 w-72">
           <animated.div
-            className="flex items-center justify-center p-2 bg-gray-100 rounded-lg w-12 h-12"
+            className="flex items-center justify-center p-2 bg-gray-100 rounded-lg w-10 h-10"
             style={iconSprings}
           >
             <AiFillFile className="w-8 h-8 text-gray-600" />
@@ -64,9 +101,9 @@ export default function FileCards({ file, standard, isDropTarget }: Props) {
           </animated.div>
           <div className="p-2">
             <div className="flex items-center justify-between">
-              <div className="flex flex-col gap-2 p-2">
-                <div className="font-bold truncate max-w-60">{file?.file.name}</div>
-                <div className="text-[13px] text-gray-500">{ConvertBytes(file?.file.size)}</div>
+              <div className="flex flex-col p-3 gap-2">
+                <div className="font-bold text-sm truncate max-w-60">{file?.file.name}</div>
+                <div className="text-[10px] text-gray-500">{ConvertSize(file?.file.size)}</div>
               </div>
             </div>
           </div>
@@ -77,45 +114,11 @@ export default function FileCards({ file, standard, isDropTarget }: Props) {
   );
 }
 
-const StatusIcon = ({ progress, isError }: { progress: number; isError: boolean }) => {
-  return (
-    <div className="flex items-center justify-center">
-      {progress === 100 && (
-        <div className="flex justify-center items-center bg-[#03c73c] w-5 h-5 rounded-full p-1">
-          <FaCheck className="text-white" />
-        </div>
-      )}
-
-      {progress < 100 && !isError && <LoadingSpinner />}
-
-      {isError && (
-        <div className="flex items-center justify-center w-5 h-5 font-extrabold bg-red-500 rounded-full p-1">
-          <FaExclamation className="text-white" />
-        </div>
-      )}
-    </div>
-  );
-};
-
-const CrownIcon = ({ standard }: { standard: boolean }) => {
-  return (
-    <>
-      {standard ? (
-        <div className="w-5 h-5">
-          <FaCrown />
-        </div>
-      ) : (
-        <div className="w-5 h-5"></div>
-      )}
-    </>
-  );
-};
-
-const ConvertBytes = (bytes: number) => {
-  if (bytes >= 1024 * 1024) {
-    return (bytes / 1024 / 1024).toFixed(2) + 'MB';
+const ConvertSize = (size: number) => {
+  if (size >= 1024 * 1024) {
+    return (size / 1024 / 1024).toFixed(2) + 'MB';
   } else {
-    return (bytes / 1024).toFixed(2) + 'KB';
+    return (size / 1024).toFixed(2) + 'KB';
   }
 };
 
