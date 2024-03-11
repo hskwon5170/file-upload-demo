@@ -22,19 +22,19 @@ export default function FileCards({ file, standard, isDropTarget }: Props) {
 
   const fileExtension = file.file?.type.split('/')[1];
 
-  // const openSprings = useSpring({
-  //   from: { opacity: 0.1, scale: 0.9, y: -20, rotate: -5 },
-  //   to: { opacity: 1, scale: 1, y: 0, rotate: 0 },
-  //   config: { duration: 300, tension: 200, friction: 15 },
-  //   // delay: 150,
-  // });
-
   const openSprings = useSpring({
-    from: { opacity: 0.05, scale: 0.9, x: -30 },
-    to: { opacity: 1, scale: 1, x: 0 },
-    config: { duration: 100, velocity: 10 },
+    from: { opacity: 0.1, scale: 0.9, y: -20, rotate: -5 },
+    to: { opacity: 1, scale: 1, y: 0, rotate: 0 },
+    config: { duration: 300, tension: 200, friction: 15 },
     delay: 150,
   });
+
+  // const openSprings = useSpring({
+  //   from: { opacity: 0.05, scale: 0.9, x: -30 },
+  //   to: { opacity: 1, scale: 1, x: 0 },
+  //   config: { duration: 100, velocity: 10 },
+  //   delay: 150,
+  // });
 
   const iconSprings = useSpring({
     from: { transform: 'scale(0.8)', opacity: 0 },

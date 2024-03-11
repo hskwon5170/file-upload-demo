@@ -59,21 +59,19 @@ export default function EntireDropzoneLayout({ children }: Props) {
   };
 
   return (
-    <>
-      <div
-        className="w-full h-full relative z-40 p-10"
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-        onDragEnter={handleDragEnter}
-        onDragLeave={handleDragLeave}
-      >
-        {children}
-        {dragActive && (
-          <div className="absolute inset-0 flex justify-center items-center border-8 z-50  border-blue-500 bg-white bg-opacity-70 backdrop-blur-sm">
-            <EntireDropzonePannel />
-          </div>
-        )}
-      </div>
-    </>
+    <div
+      className="w-full h-full relative z-40 p-10"
+      onDrop={handleDrop}
+      onDragOver={handleDragOver}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+    >
+      {children}
+      {dragActive && (
+        <div className="absolute inset-0 flex justify-center items-center border-8 z-50  border-blue-500 bg-white bg-opacity-70 backdrop-blur-sm">
+          <EntireDropzonePannel />
+        </div>
+      )}
+    </div>
   );
 }

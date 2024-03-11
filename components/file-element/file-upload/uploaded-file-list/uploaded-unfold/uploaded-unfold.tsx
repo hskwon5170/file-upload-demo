@@ -132,7 +132,7 @@ export default function UploadedUnfold() {
         }}
       >
         {isLoading && (
-          <div className="absolute z-50 top-0 left-0 backdrop-blur-md bg-gray-300 bg-opacity-50 w-full h-screen">
+          <div className="absolute z-50 top-0 left-0 backdrop-blur-md bg-gray-300 bg-opacity-50 w-full">
             <SortFallback />
           </div>
         )}
