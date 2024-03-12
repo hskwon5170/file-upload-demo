@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { fileAtom, fileExploreTriggerAtom, removeFileAtom } from '@/atom/files';
+import { fileAtom, fileExploreTriggerAtom, isOrderChangeAtom, removeFileAtom } from '@/atom/files';
 import { useAtom, useSetAtom } from 'jotai';
 import type { FileWithProgress } from '@/types/files';
 import UploadedFileListHeader from './uploaded-file-list-header/uploaded-file-list-header';
@@ -12,7 +12,6 @@ import UploadUnfoldLayout from './upload-unfold-layout';
 import '../uploaded-unfold/uploaded-unfold.css';
 import styles from './uploded-unfold.module.css';
 import './uploaded-unfold.css';
-import EntireDropzoneLayout from '@/components/entire-dropzone-layout.tsx/entire-dropzone-layout';
 
 type Props = {
   dragFrom: null | number;
@@ -21,23 +20,22 @@ type Props = {
   // updatedOrder: FileWithProgress[];
 };
 
-type Drag<T> = React.DragEvent<T>;
+type DragLiElement = React.DragEvent<HTMLLIElement>;
 
 export default function UploadedUnfold() {
   const openFileExplorer = useSetAtom(fileExploreTriggerAtom);
+
+  const setIsOrderChange = useSetAtom(isOrderChangeAtom);
   const [files, setFiles] = useAtom(fileAtom);
   const [isLoading, setIsLoading] = useState(false);
-
   const [dragAndDrop, setDragAndDrop] = useState<Props>({
     dragFrom: null,
     dragTo: null,
     originalOrder: [],
-    // updatedOrder: [],
   });
   const [dropTargetIndex, setDropTargetIndex] = useState<number | null>(null);
-  const onDragStart = (e: Drag<HTMLLIElement>) => {
+  const onDragStart = (e: DragLiElement) => {
     e.currentTarget.style.opacity = '0.5';
-    console.log(e.currentTarget);
 
     // 들어올린 파일의 original 인덱스
     const fromIndex = parseInt(e.currentTarget.dataset.position ?? '');
@@ -49,8 +47,11 @@ export default function UploadedUnfold() {
     }));
   };
 
-  const onDragOver = (e: Drag<HTMLLIElement>) => {
-    console.log(' 드래그하면서 마우스가 대상 객체 위에 자리잡고있을때 발생');
+  const onDragOver = (e: DragLiElement) => {
+    // console.log(' 드래그하면서 마우스가 대상 객체 위에 자리잡고있을때 발생');
+
+    // 모달에 파일드랍 동작과 파일 순서 드래그 변경 구분을 위한 추가 상태
+    setIsOrderChange(true);
     e.preventDefault();
     const overIndex = parseInt(e.currentTarget.dataset.position ?? '');
     if (dropTargetIndex !== overIndex) {
@@ -58,7 +59,7 @@ export default function UploadedUnfold() {
     }
   };
 
-  const onDrop = (e: Drag<HTMLLIElement>) => {
+  const onDrop = (e: DragLiElement) => {
     e.preventDefault();
 
     const { originalOrder, dragFrom, dragTo } = dragAndDrop;
@@ -69,6 +70,9 @@ export default function UploadedUnfold() {
     setDropTargetIndex(null);
     // console.log(' 드래그가 끝나서 드래그하던 객체를 놓는 장소에 위치한 객체에서 발생함', toIndex);
 
+    // 모달에 파일드랍 동작과 파일 순서 드래그 변경 구분을 위한 추가 상태
+    setIsOrderChange(false);
+
     const itemDragged = originalOrderList[fromIndex as number];
     const remainingItems = originalOrderList.filter((_, idx) => idx !== fromIndex);
 
@@ -77,7 +81,6 @@ export default function UploadedUnfold() {
       itemDragged,
       ...remainingItems.slice(toIndex),
     ];
-    console.log('updateOrderList', updateOrderList);
     setFiles(updateOrderList);
     if (toIndex !== dragTo) {
       setDragAndDrop((prev) => ({
@@ -95,7 +98,7 @@ export default function UploadedUnfold() {
     });
   };
 
-  const onDragLeave = (e: Drag<HTMLLIElement>) => {
+  const onDragLeave = (e: DragLiElement) => {
     e.preventDefault();
     // console.log('드래그가 끝나서 마우스가 대상 객체의 위에서 벗어날때 발생함');
     setDropTargetIndex(null);
@@ -106,8 +109,9 @@ export default function UploadedUnfold() {
     }));
   };
 
-  const onDragEnd = (e: Drag<HTMLLIElement>) => {
+  const onDragEnd = (e: DragLiElement) => {
     e.currentTarget.style.opacity = '1';
+    setIsOrderChange(false);
   };
 
   const handleSortButton = () => {
@@ -144,7 +148,7 @@ export default function UploadedUnfold() {
             return (
               <li
                 key={file?.id}
-                className="list-none draggable"
+                className="list-none draggable filecard"
                 draggable={true}
                 data-position={idx}
                 onDragStart={onDragStart}

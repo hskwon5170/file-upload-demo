@@ -8,7 +8,6 @@ import PreviewModalLayout from './preview-modal-layout/preview-modal-layout';
 export default function PreviewModalContents() {
   const [selectedPage, setSelectedPage] = useAtom(selectedPageAtom);
   const [isOcrAction] = useAtom(ocrActionAtom);
-  console.log('selectedPage', selectedPage);
   const handlePages = (page: number) => {
     setSelectedPage(page);
   };

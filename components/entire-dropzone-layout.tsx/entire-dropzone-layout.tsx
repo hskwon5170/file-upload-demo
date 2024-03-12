@@ -5,7 +5,7 @@ import type { FileWithProgress } from '@/types/files';
 import { DragEvent, useState, useEffect } from 'react';
 import EntireDropzonePannel from './entire-dropzone-pannel';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { closeAtom, isDragOverAtom } from '@/atom/files';
+import { closeAtom, isOrderChangeAtom } from '@/atom/files';
 
 type Props = {
   children: React.ReactNode;
@@ -18,6 +18,7 @@ export default function EntireDropzoneLayout({ children, isModal }: Props) {
   const [dragActive, setDragActive] = useState(false);
   const [dragCounter, setDragCounter] = useState(0);
   const setClose = useSetAtom(closeAtom);
+  const isOrderChange = useAtomValue(isOrderChangeAtom);
 
   useEffect(() => {
     if (dragCounter === 0) {
@@ -37,7 +38,6 @@ export default function EntireDropzoneLayout({ children, isModal }: Props) {
 
     for (const newFile of Array.from(e.dataTransfer.files)) {
       const handledFile = await handleFile(newFile);
-      console.log('handledFile', handledFile);
       UploadFile(handledFile as FileWithProgress);
     }
   };
@@ -70,7 +70,7 @@ export default function EntireDropzoneLayout({ children, isModal }: Props) {
       onDragLeave={handleDragLeave}
     >
       {children}
-      {dragActive && (
+      {dragActive && !isOrderChange && (
         <div
           style={isModal ? modalStyle : {}}
           // style={{ width: `${width}px`, height: `${height}px` }}

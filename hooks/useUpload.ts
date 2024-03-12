@@ -33,7 +33,6 @@ const useUpload = () => {
           file?.id === fileWithStatus?.id ? { ...file, status: 'done', progress: 100 } : file,
         ),
       );
-      console.log('response', response);
       return response;
     } catch (e) {
       setFiles((prev) => {
