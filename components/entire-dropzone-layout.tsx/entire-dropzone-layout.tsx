@@ -4,14 +4,15 @@ import useUpload from '@/hooks/useUpload';
 import type { FileWithProgress } from '@/types/files';
 import { DragEvent, useState, useEffect } from 'react';
 import EntireDropzonePannel from './entire-dropzone-pannel';
-import { useSetAtom } from 'jotai';
-import { closeAtom } from '@/atom/files';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { closeAtom, isDragOverAtom } from '@/atom/files';
 
 type Props = {
   children: React.ReactNode;
+  isModal?: boolean;
 };
 
-export default function EntireDropzoneLayout({ children }: Props) {
+export default function EntireDropzoneLayout({ children, isModal }: Props) {
   const { UploadFile, handleTaskGroup } = useUpload();
   const { handleFile } = useHandleFile();
   const [dragActive, setDragActive] = useState(false);
@@ -60,6 +61,8 @@ export default function EntireDropzoneLayout({ children }: Props) {
 
   return (
     <div
+      style={isModal ? modalStyle : {}}
+      // style={{ width: `${width}px`, height: `${height}px` }}
       className="w-full h-full relative z-40 p-10"
       onDrop={handleDrop}
       onDragOver={handleDragOver}
@@ -68,10 +71,20 @@ export default function EntireDropzoneLayout({ children }: Props) {
     >
       {children}
       {dragActive && (
-        <div className="absolute inset-0 flex justify-center items-center border-8 z-50  border-blue-500 bg-white bg-opacity-70 backdrop-blur-sm">
-          <EntireDropzonePannel />
+        <div
+          style={isModal ? modalStyle : {}}
+          // style={{ width: `${width}px`, height: `${height}px` }}
+          className="absolute inset-0 flex justify-center items-center border-8 z-50  border-blue-500 bg-white bg-opacity-70 backdrop-blur-sm"
+        >
+          <EntireDropzonePannel isModal={isModal} />
         </div>
       )}
     </div>
   );
 }
+
+const modalStyle = {
+  width: '503px',
+  height: '503px',
+  borderRadius: '12px',
+};

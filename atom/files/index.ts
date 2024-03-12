@@ -15,3 +15,5 @@ export const removeFileAtom = atom(null, (get, set, paramFile: FileWithProgress)
 });
 
 export const fileExploreTriggerAtom = atom(false);
+
+export const isDragOverAtom = atom(false);

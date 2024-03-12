@@ -33,10 +33,10 @@ export default function UploadedFileListHeader() {
           {files.length}개 <span className="font-extrabold">완료</span>
         </div>
         <div className="flex items-center gap-3">
-          <VscChromeMinimize
+          {/* <VscChromeMinimize
             className="cursor-pointer hover:bg-gray-100"
             onClick={() => setMinimize(true)}
-          />
+          /> */}
           <MdClose className="cursor-pointer hover:bg-gray-100" onClick={() => setClose(true)} />
         </div>
       </div>

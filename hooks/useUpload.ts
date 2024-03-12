@@ -12,7 +12,7 @@ const useUpload = () => {
     formData.append('file', fileWithStatus?.file);
 
     try {
-      await axios.post('http://10.1.1.190:8084/api/files/upload', formData, {
+      const response = await axios.post('http://10.1.1.190:8084/api/files/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -33,6 +33,8 @@ const useUpload = () => {
           file?.id === fileWithStatus?.id ? { ...file, status: 'done', progress: 100 } : file,
         ),
       );
+      console.log('response', response);
+      return response;
     } catch (e) {
       setFiles((prev) => {
         return prev.map((file) => {

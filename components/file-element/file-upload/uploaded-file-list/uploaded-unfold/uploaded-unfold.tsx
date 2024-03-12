@@ -12,6 +12,7 @@ import UploadUnfoldLayout from './upload-unfold-layout';
 import '../uploaded-unfold/uploaded-unfold.css';
 import styles from './uploded-unfold.module.css';
 import './uploaded-unfold.css';
+import EntireDropzoneLayout from '@/components/entire-dropzone-layout.tsx/entire-dropzone-layout';
 
 type Props = {
   dragFrom: null | number;
@@ -36,7 +37,8 @@ export default function UploadedUnfold() {
   const [dropTargetIndex, setDropTargetIndex] = useState<number | null>(null);
   const onDragStart = (e: Drag<HTMLLIElement>) => {
     e.currentTarget.style.opacity = '0.5';
-    // console.log('객체를 드래그하려고 시작할때 발생');
+    console.log(e.currentTarget);
+
     // 들어올린 파일의 original 인덱스
     const fromIndex = parseInt(e.currentTarget.dataset.position ?? '');
     // console.log('이동시키려는 객체의 원래 인덱스', fromIndex);
@@ -48,7 +50,7 @@ export default function UploadedUnfold() {
   };
 
   const onDragOver = (e: Drag<HTMLLIElement>) => {
-    // console.log(' 드래그하면서 마우스가 대상 객체 위에 자리잡고있을때 발생');
+    console.log(' 드래그하면서 마우스가 대상 객체 위에 자리잡고있을때 발생');
     e.preventDefault();
     const overIndex = parseInt(e.currentTarget.dataset.position ?? '');
     if (dropTargetIndex !== overIndex) {
@@ -155,7 +157,12 @@ export default function UploadedUnfold() {
                   className="cursor-pointer hover:bg-gray-100"
                   onClick={() => removeFile(file)}
                 /> */}
-                <FileCards file={file} standard={standard} isDropTarget={idx === dropTargetIndex} />
+                <FileCards
+                  file={file}
+                  standard={standard}
+                  isDropTarget={idx === dropTargetIndex}
+                  index={idx}
+                />
               </li>
             );
           })}

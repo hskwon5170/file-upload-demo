@@ -5,19 +5,19 @@ import { BiSolidFileJpg } from 'react-icons/bi';
 import { BiSolidFilePng } from 'react-icons/bi';
 import { BiSolidFilePdf } from 'react-icons/bi';
 import { MdClose } from 'react-icons/md';
-import { CrownIcon, StatusIcon } from './file-card-icons/file-card-icons';
+import { StatusIcon } from './file-card-icons/file-card-icons';
 import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { useSetAtom } from 'jotai';
 import { removeFileAtom } from '@/atom/files';
-import { FaTrash } from 'react-icons/fa6';
 
 type Props = {
   file: FileWithProgress;
   standard: boolean;
   isDropTarget?: boolean;
+  index?: number;
 };
 
-export default function FileCards({ file, standard, isDropTarget }: Props) {
+export default function FileCards({ file, standard, isDropTarget, index }: Props) {
   const removeFile = useSetAtom(removeFileAtom);
 
   const fileExtension = file.file?.type.split('/')[1];
@@ -25,8 +25,7 @@ export default function FileCards({ file, standard, isDropTarget }: Props) {
   const openSprings = useSpring({
     from: { opacity: 0.1, scale: 0.9, y: -20, rotate: -5 },
     to: { opacity: 1, scale: 1, y: 0, rotate: 0 },
-    config: { duration: 300, tension: 200, friction: 15 },
-    delay: 150,
+    config: { duration: 50, tension: 200, friction: 15 },
   });
 
   // const openSprings = useSpring({
@@ -87,10 +86,9 @@ export default function FileCards({ file, standard, isDropTarget }: Props) {
               <MdClose />
             </div>
           ) : (
-            <CrownIcon standard={standard} />
+            <p className="text-gray-500">{(index ?? 0) + 1}</p>
           )}
         </div>
-        {/* <CrownIcon standard={standard} /> */}
         <div className="flex items-center flex-1 w-72">
           <animated.div
             className="flex items-center justify-center p-2 bg-gray-100 rounded-lg w-10 h-10"
