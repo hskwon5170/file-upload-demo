@@ -19,7 +19,6 @@ type Props = {
 
 export default function FileCards({ file, standard, isDropTarget, index }: Props) {
   const removeFile = useSetAtom(removeFileAtom);
-  console.log('file', file);
 
   // const fileExtension = file.file?.type.split('/')[1];
 

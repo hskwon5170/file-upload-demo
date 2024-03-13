@@ -6,14 +6,17 @@ import { useCallback } from 'react';
 const timeStamp = new Date().getTime();
 const isFileAlreadyUploaded = (newFile: File, uploadedFileArray: FileWithProgress[]) => {
   return uploadedFileArray.some(
-    (f) => f.file.name === newFile.name && f.file.size === newFile.size && f.file.lastModified === newFile.lastModified,
+    (f) =>
+      f.file.name === newFile.name &&
+      f.file.size === newFile.size &&
+      f.file.lastModified === newFile.lastModified,
   );
 };
 
 const useHandleFile = () => {
   const [files, setFiles] = useAtom(fileAtom);
 
-  const handleFile = useCallback(
+  const checkAlreadyUploaded = useCallback(
     async (newFile: File) => {
       const fileWithStatus: FileWithProgress = {
         file: newFile,
@@ -26,10 +29,14 @@ const useHandleFile = () => {
       const isAlreadyUploaded = isFileAlreadyUploaded(newFile, files);
 
       if (isAlreadyUploaded) {
-        const prompt = window.confirm(`${newFile.name}은 이미 업로드된 파일입니다. 다시 업로드하시겠습니까?`);
+        const prompt = window.confirm(
+          `${newFile.name}은 이미 업로드된 파일입니다. 다시 업로드하시겠습니까?`,
+        );
         if (!prompt) return;
 
-        setFiles((prev) => prev.map((file) => (file.id === fileWithStatus.id ? fileWithStatus : file)));
+        setFiles((prev) =>
+          prev.map((file) => (file.id === fileWithStatus.id ? fileWithStatus : file)),
+        );
       } else {
         setFiles((prev) => [...prev, fileWithStatus]);
       }
@@ -37,7 +44,7 @@ const useHandleFile = () => {
     },
     [files, setFiles],
   );
-  return { handleFile };
+  return { checkAlreadyUploaded };
 };
 
 export default useHandleFile;

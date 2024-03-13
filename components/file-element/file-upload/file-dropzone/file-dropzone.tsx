@@ -12,7 +12,7 @@ export default function FileDropZone() {
   const setClose = useSetAtom(closeAtom);
 
   const { UploadFile } = useUpload();
-  const { handleFile } = useHandleFile();
+  const { checkAlreadyUploaded } = useHandleFile();
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setClose(false);
@@ -20,7 +20,12 @@ export default function FileDropZone() {
     if (!fileArray) return;
 
     for (const SelectedFiles of Array.from(fileArray)) {
-      const handledFile = await handleFile(SelectedFiles);
+      console.log('SelectedFiles', SelectedFiles);
+      // if (!['image/jpeg', 'application/pdf'].includes(fileWithStatus.file.type)) {
+      //   alert('지원하지 않는 파일 형식입니다.');
+      //   return null;
+      // }
+      const handledFile = await checkAlreadyUploaded(SelectedFiles);
       UploadFile(handledFile as FileWithProgress);
     }
   };

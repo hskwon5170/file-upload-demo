@@ -7,7 +7,6 @@ import { use } from 'react';
 
 const useUpload = () => {
   const [files, setFiles] = useAtom(fileAtom);
-
   const UploadFile = async (fileWithStatus: FileWithProgress, taskGroupId?: string) => {
     const formData = new FormData();
     formData.append('file', fileWithStatus?.file);

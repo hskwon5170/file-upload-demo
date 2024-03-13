@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useDragAndDrop } from '@/hooks/useDragAndDrop';
+import { useFileOrderChange } from '@/hooks/useFileOrderChange';
 import { fileAtom, fileExploreTriggerAtom } from '@/atom/files';
 import { useAtom, useSetAtom } from 'jotai';
 import UploadedFileListHeader from './uploaded-file-list-header/uploaded-file-list-header';
@@ -24,7 +24,7 @@ export default function UploadedUnfold() {
   });
 
   const { onDragStart, onDragOver, onDrop, onDragLeave, onDragEnd, dropTargetIndex } =
-    useDragAndDrop();
+    useFileOrderChange();
 
   const handleSortButton = () => {
     setSortProgress((prev) => ({ ...prev, progress: 0, isSort: true }));
@@ -93,12 +93,12 @@ export default function UploadedUnfold() {
 
       <section className="flex h-full items-center justify-center w-full gap-3 bg-white border-t-[1px]">
         <div className="w-full px-10">
-          {/* <div className="flex gap-3 my-3">
-            <input type="checkbox" id="check" />
+          <div className="flex items-center gap-3 my-3 ml-1">
+            <input type="checkbox" id="check" className="w-4 h-4 accent-[#5347cf]" />
             <label htmlFor="check" className="cursor-pointer">
               순서대로 PDF 일괄 병합
             </label>
-          </div> */}
+          </div>
           <div className="flex gap-3 mt-2">
             <Button
               isLoading={isLoading}
@@ -107,7 +107,7 @@ export default function UploadedUnfold() {
             >
               파일 추가
             </Button>
-            <Button className="text-white bg-[#5347cf]">PDF 일괄 병합</Button>
+            {/* <Button className="text-white bg-[#5347cf]">PDF 일괄 병합</Button> */}
             <Button
               isLoading={isLoading}
               onClick={handleSortButton}

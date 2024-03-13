@@ -1,11 +1,11 @@
 'use client';
 import useHandleFile from '@/hooks/useHandleFile';
 import useUpload from '@/hooks/useUpload';
-import type { FileWithProgress } from '@/types/files';
 import { DragEvent, useState, useEffect } from 'react';
 import EntireDropzonePannel from './entire-dropzone-pannel';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { closeAtom, isOrderChangeAtom } from '@/atom/files';
+import type { FileWithProgress } from '@/types/files';
 
 type Props = {
   children: React.ReactNode;
@@ -14,7 +14,7 @@ type Props = {
 
 export default function EntireDropzoneLayout({ children, isModal }: Props) {
   const { UploadFile, handleTaskGroup } = useUpload();
-  const { handleFile } = useHandleFile();
+  const { checkAlreadyUploaded } = useHandleFile();
   const [dragActive, setDragActive] = useState(false);
   const [dragCounter, setDragCounter] = useState(0);
   const setClose = useSetAtom(closeAtom);
@@ -38,7 +38,13 @@ export default function EntireDropzoneLayout({ children, isModal }: Props) {
     setClose(false);
 
     for (const newFile of Array.from(e.dataTransfer.files)) {
-      const handledFile = await handleFile(newFile);
+      const [isValid, errorMsg] = validateFileType(newFile.type);
+      if (!isValid) {
+        alert(errorMsg);
+        return;
+      }
+
+      const handledFile = await checkAlreadyUploaded(newFile);
       UploadFile(handledFile as FileWithProgress);
     }
   };
@@ -59,6 +65,8 @@ export default function EntireDropzoneLayout({ children, isModal }: Props) {
     e.stopPropagation();
     setDragCounter((prev) => prev - 1);
   };
+
+  console.log('dragActive', dragActive, 'isOrderChange', isOrderChange);
 
   return (
     <div
@@ -87,4 +95,10 @@ const modalStyle = {
   width: '508px',
   height: '508px',
   borderRadius: '12px',
+};
+
+const validateFileType = (fileType: string): [boolean, string | null] => {
+  const isValidFileType = ['image/jpeg', 'application/pdf'].includes(fileType);
+  const errorMessage = isValidFileType ? null : 'JPG, PDF 파일만 업로드 가능합니다';
+  return [isValidFileType, errorMessage];
 };

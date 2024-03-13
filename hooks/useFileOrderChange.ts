@@ -12,7 +12,7 @@ type Props = {
 
 type DragLiElement = React.DragEvent<HTMLLIElement>;
 
-export const useDragAndDrop = () => {
+export const useFileOrderChange = () => {
   const [files, setFiles] = useAtom(fileAtom);
   const setIsOrderChange = useSetAtom(isOrderChangeAtom);
   const [dropTargetIndex, setDropTargetIndex] = useState<number | null>(null);
