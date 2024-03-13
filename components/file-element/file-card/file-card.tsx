@@ -4,9 +4,8 @@ import { FileWithProgress } from '@/types/files';
 import { BiSolidFileJpg } from 'react-icons/bi';
 import { BiSolidFilePng } from 'react-icons/bi';
 import { BiSolidFilePdf } from 'react-icons/bi';
-import { MdClose } from 'react-icons/md';
-import { StatusIcon } from './file-card-icons/file-card-icons';
-import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
+import { IndexIconWithAction, StatusIcon } from './file-card-icons/file-card-icons';
+import { useEffect, useRef, useState } from 'react';
 import { useSetAtom } from 'jotai';
 import { removeFileAtom } from '@/atom/files';
 import { RxDragHandleDots2 } from 'react-icons/rx';
@@ -20,8 +19,9 @@ type Props = {
 
 export default function FileCards({ file, standard, isDropTarget, index }: Props) {
   const removeFile = useSetAtom(removeFileAtom);
+  console.log('file', file);
 
-  const fileExtension = file.file?.type.split('/')[1];
+  // const fileExtension = file.file?.type.split('/')[1];
 
   const openSprings = useSpring({
     from: { opacity: 0.1, scale: 0.9, y: -20, rotate: -5 },
@@ -84,18 +84,12 @@ export default function FileCards({ file, standard, isDropTarget, index }: Props
         <div className="flex items-center justify-center">
           <RxDragHandleDots2 className="text-xl text-gray-500" />
         </div>
-        <div className="w-2 flex items-center justify-center cursor-pointer">
-          {isHover ? (
-            <div
-              onClick={() => removeFile(file)}
-              className="text-gray-500 bg-gray-200 w-5 h-5 rounded-full flex justify-center items-center p-1"
-            >
-              <MdClose />
-            </div>
-          ) : (
-            <p className="text-gray-500">{(index ?? 0) + 1}</p>
-          )}
-        </div>
+
+        <IndexIconWithAction
+          isHover={isHover}
+          onClick={() => removeFile(file)}
+          index={index as number}
+        />
         <div className="flex items-center flex-1 w-72">
           <animated.div
             className="flex items-center justify-center p-2 bg-gray-100 rounded-lg w-10 h-10"
@@ -107,7 +101,9 @@ export default function FileCards({ file, standard, isDropTarget, index }: Props
           <div className="p-2">
             <div className="flex items-center justify-between">
               <div className="flex flex-col p-3 gap-2">
-                <div className="font-bold text-sm truncate max-w-60">{file?.file.name}</div>
+                <div className="flex items-center gap-3">
+                  <div className="font-bold text-sm truncate max-w-60">{file?.file.name}</div>
+                </div>
                 <div className="text-[10px] text-gray-500">{ConvertSize(file?.file.size)}</div>
               </div>
             </div>

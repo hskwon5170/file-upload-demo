@@ -9,12 +9,9 @@ export default function FileDragActivePannel() {
       </div>
       <div>
         <div className="font-bold text-2xl">
-          <span className="font-bold text-blue-600">파일</span>이
-          준비되었어요!
+          <span className="font-bold text-[#5347cf]">파일</span>이 준비되었어요!
         </div>
-        <div className="my-1">
-          파일을 여기에 끌어다 놓으면 파일 업로드가 바로 시작됩니다.
-        </div>
+        <div className="my-1">파일을 여기에 끌어다 놓으면 파일 업로드가 바로 시작됩니다.</div>
       </div>
     </div>
   );

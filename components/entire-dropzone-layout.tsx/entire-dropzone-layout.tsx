@@ -74,7 +74,7 @@ export default function EntireDropzoneLayout({ children, isModal }: Props) {
       {dragActive && isOrderChange === false && (
         <div
           style={isModal ? modalStyle : {}}
-          className="absolute inset-0 flex justify-center items-center border-8 z-50  border-blue-600 bg-white bg-opacity-30 backdrop-blur-xl"
+          className="absolute inset-0 flex justify-center items-center border-8 z-50  border-[#5347cf] bg-white bg-opacity-30 backdrop-blur-lg"
         >
           <EntireDropzonePannel isModal={isModal} />
         </div>
