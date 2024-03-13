@@ -19,17 +19,24 @@ export default function EntireDropzoneLayout({ children, isModal }: Props) {
   const [dragCounter, setDragCounter] = useState(0);
   const setClose = useSetAtom(closeAtom);
   const isOrderChange = useAtomValue(isOrderChangeAtom);
-  // console.log('isOrderChange, ', isOrderChange);
+  // console.log('dragActive', dragActive, 'isOrderChange', isOrderChange, 'dragCounter', dragCounter);
 
   useEffect(() => {
-    if (dragCounter === 0) {
+    // 파일 순서 변경X, dragCounter가 0
+    if (!isOrderChange && dragCounter === 0) {
       setDragActive(false);
     }
 
-    if (dragCounter === 1) {
+    // 파일 순서 변경X, dragCounter가 1
+    if (!isOrderChange && dragCounter === 1) {
       setDragActive(true);
     }
-  }, [dragCounter]);
+
+    // 파일 순서 변경O
+    if (isOrderChange) {
+      setDragActive(false);
+    }
+  }, [dragCounter, isOrderChange]);
 
   const handleDrop = async (e: DragEvent) => {
     e.preventDefault();
@@ -41,9 +48,8 @@ export default function EntireDropzoneLayout({ children, isModal }: Props) {
       const [isValid, errorMsg] = validateFileType(newFile.type);
       if (!isValid) {
         alert(errorMsg);
-        return;
+        continue;
       }
-
       const handledFile = await checkAlreadyUploaded(newFile);
       UploadFile(handledFile as FileWithProgress);
     }
@@ -65,8 +71,6 @@ export default function EntireDropzoneLayout({ children, isModal }: Props) {
     e.stopPropagation();
     setDragCounter((prev) => prev - 1);
   };
-
-  console.log('dragActive', dragActive, 'isOrderChange', isOrderChange);
 
   return (
     <div

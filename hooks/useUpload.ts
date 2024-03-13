@@ -3,7 +3,6 @@ import { fileAtom } from '@/atom/files';
 import type { FileWithProgress } from '@/types/files';
 import axios from 'axios';
 import { useAtom } from 'jotai';
-import { use } from 'react';
 
 const useUpload = () => {
   const [files, setFiles] = useAtom(fileAtom);
@@ -106,10 +105,13 @@ const useUpload = () => {
 
     // 생성한 태스크 그룹 아이디를 개별 파일에 할당하여 POST 요청하기
     await handleFileWithTaskGroup(file, taskGroupId);
+
     // (선택적) PDF 병합
     await handleMergeFiles(taskGroupId);
+
     // OCR 정보 추출
     await handleExtractOcr(taskGroupId);
+
     // S3, DB 업로드
     await uploadFiles(taskGroupId);
     // }

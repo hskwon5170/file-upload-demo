@@ -17,6 +17,7 @@ export default function UploadedUnfold() {
   const openFileExplorer = useSetAtom(fileExploreTriggerAtom);
 
   const [files, setFiles] = useAtom(fileAtom);
+  console.log('files', files);
   const [isLoading, setIsLoading] = useState(false);
   const [sortProgress, setSortProgress] = useState({
     progress: 0,
