@@ -1,5 +1,5 @@
-import UploadedFileList from "@/components/file-element/file-upload/uploaded-file-list/uploaded-file-list";
+import UploadStatusList from '@/components/file-element/file-upload/uploaded-file-list/upload-status-list';
 
 export default function Page() {
-  return <UploadedFileList />;
+  return <UploadStatusList />;
 }
