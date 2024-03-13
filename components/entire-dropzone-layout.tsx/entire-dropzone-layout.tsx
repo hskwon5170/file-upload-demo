@@ -19,6 +19,7 @@ export default function EntireDropzoneLayout({ children, isModal }: Props) {
   const [dragCounter, setDragCounter] = useState(0);
   const setClose = useSetAtom(closeAtom);
   const isOrderChange = useAtomValue(isOrderChangeAtom);
+  // console.log('isOrderChange, ', isOrderChange);
 
   useEffect(() => {
     if (dragCounter === 0) {
@@ -70,7 +71,7 @@ export default function EntireDropzoneLayout({ children, isModal }: Props) {
       onDragLeave={handleDragLeave}
     >
       {children}
-      {dragActive && !isOrderChange && (
+      {dragActive && isOrderChange === false && (
         <div
           style={isModal ? modalStyle : {}}
           className="absolute inset-0 flex justify-center items-center border-8 z-50  border-blue-600 bg-white bg-opacity-30 backdrop-blur-xl"

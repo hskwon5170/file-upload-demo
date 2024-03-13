@@ -8,7 +8,7 @@ export default function ProgressBar({ progress, isError }: Props) {
       {!isError && (
         <div
           style={{ width: `${progress}%` }}
-          className="h-full text-xs text-center text-white transition-all duration-1000  ease bg-[#5347cf] rounded-full"
+          className="h-full text-xs text-center text-white transition-all duration-500  ease bg-[#5347cf] rounded-full"
         />
       )}
     </div>

@@ -9,6 +9,7 @@ import { StatusIcon } from './file-card-icons/file-card-icons';
 import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { useSetAtom } from 'jotai';
 import { removeFileAtom } from '@/atom/files';
+import { RxDragHandleDots2 } from 'react-icons/rx';
 
 type Props = {
   file: FileWithProgress;
@@ -80,11 +81,14 @@ export default function FileCards({ file, standard, isDropTarget, index }: Props
         className=" flex items-center w-full h-12 gap-5 my-3 cursor-pointer  px-6  hover:bg-gray-100 duration-300 transition-all ease-in-out"
         style={openSprings}
       >
+        <div className="flex items-center justify-center">
+          <RxDragHandleDots2 className="text-xl text-gray-500" />
+        </div>
         <div className="w-2 flex items-center justify-center cursor-pointer">
           {isHover ? (
             <div
               onClick={() => removeFile(file)}
-              className="text-gray-500 bg-gray-200 w-5 h-5 rounded-full flex justify-center items-center p-1 hover:scale-105 transition-all duration-300 ease-in-out"
+              className="text-gray-500 bg-gray-200 w-5 h-5 rounded-full flex justify-center items-center p-1"
             >
               <MdClose />
             </div>

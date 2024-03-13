@@ -50,7 +50,6 @@ export const useDragAndDrop = () => {
 
   const onDrop = (e: DragLiElement) => {
     e.preventDefault();
-
     const { originalOrder, dragFrom, dragTo } = dragAndDrop;
 
     const originalOrderList = originalOrder;

@@ -1,3 +1,4 @@
+// #1. 태스크 그룹 생성
 export async function CreateTaskGroup() {
   try {
     const response = await fetch(

@@ -18,16 +18,31 @@ export default function UploadedUnfold() {
 
   const [files, setFiles] = useAtom(fileAtom);
   const [isLoading, setIsLoading] = useState(false);
+  const [sortProgress, setSortProgress] = useState({
+    progress: 0,
+    isSort: false,
+  });
 
   const { onDragStart, onDragOver, onDrop, onDragLeave, onDragEnd, dropTargetIndex } =
     useDragAndDrop();
 
   const handleSortButton = () => {
+    setSortProgress((prev) => ({ ...prev, progress: 0, isSort: true }));
     setIsLoading(true);
 
-    new Promise((resolve) => {
-      setTimeout(resolve, 4000);
-    }).finally(() => setIsLoading(false));
+    const interval = setInterval(() => {
+      setSortProgress((prev) => ({ ...prev, progress: prev.progress + 25 }));
+    }, 1000);
+
+    new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+        clearInterval(interval);
+      }, 4000);
+    }).finally(() => {
+      setIsLoading(false);
+      setSortProgress({ progress: 100, isSort: false });
+    });
   };
 
   if (!files || !files.length) return null;
@@ -35,7 +50,7 @@ export default function UploadedUnfold() {
   return (
     <UploadUnfoldLayout>
       <section className="w-full bg-white border-b-[1px]">
-        <UploadedFileListHeader />
+        <UploadedFileListHeader sortProgress={sortProgress} />
       </section>
 
       <section
@@ -55,7 +70,7 @@ export default function UploadedUnfold() {
             return (
               <li
                 key={file?.id}
-                className="list-none draggable filecard"
+                className="list-none draggable"
                 draggable={true}
                 data-position={idx}
                 onDragStart={onDragStart}
