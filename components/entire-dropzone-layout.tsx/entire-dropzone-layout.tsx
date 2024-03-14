@@ -4,7 +4,7 @@ import useUpload from '@/hooks/useUpload';
 import { DragEvent, useState, useEffect } from 'react';
 import EntireDropzonePannel from './entire-dropzone-pannel';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { closeAtom, isOrderChangeAtom } from '@/atom/files';
+import { closeAtom, isBlankSpaceDragAtom, isOrderChangeAtom } from '@/atom/files';
 import type { FileWithProgress } from '@/types/files';
 
 type Props = {
@@ -17,9 +17,9 @@ export default function EntireDropzoneLayout({ children, isModal }: Props) {
   const { checkAlreadyUploaded } = useHandleFile();
   const [dragActive, setDragActive] = useState(false);
   const [dragCounter, setDragCounter] = useState(0);
+  const isBlankSpaceDrag = useAtomValue(isBlankSpaceDragAtom);
   const setClose = useSetAtom(closeAtom);
   const isOrderChange = useAtomValue(isOrderChangeAtom);
-  // console.log('dragActive', dragActive, 'isOrderChange', isOrderChange, 'dragCounter', dragCounter);
 
   useEffect(() => {
     // 파일 순서 변경X, dragCounter가 0
@@ -83,7 +83,7 @@ export default function EntireDropzoneLayout({ children, isModal }: Props) {
       onDragLeave={handleDragLeave}
     >
       {children}
-      {dragActive && isOrderChange === false && (
+      {dragActive && isOrderChange === false && !isBlankSpaceDrag && (
         <div
           style={isModal ? modalStyle : {}}
           className="absolute inset-0 flex justify-center items-center border-8 z-50  border-[#5347cf] bg-white bg-opacity-30 backdrop-blur-lg"
@@ -102,7 +102,7 @@ const modalStyle = {
 };
 
 const validateFileType = (fileType: string): [boolean, string | null] => {
-  const isValidFileType = ['image/jpeg', 'application/pdf'].includes(fileType);
+  const isValidFileType = ['image/jpeg', 'application/pdf', 'image/png'].includes(fileType);
   const errorMessage = isValidFileType ? null : 'JPG, PDF 파일만 업로드 가능합니다';
   return [isValidFileType, errorMessage];
 };

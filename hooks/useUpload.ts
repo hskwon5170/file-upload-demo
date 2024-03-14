@@ -105,7 +105,7 @@ const useUpload = () => {
     await handleMergeFiles(taskGroupId);
 
     // OCR 정보 추출
-    await handleExtractOcr(taskGroupId);
+    await handleExtractOcr(taskGroupId, file);
 
     // S3, DB 업로드
     await uploadFiles(taskGroupId);
@@ -127,7 +127,7 @@ const useUpload = () => {
   };
 
   // # 3. OCR 추출하기
-  const handleExtractOcr = async (taskGroupId: string) => {
+  const handleExtractOcr = async (taskGroupId: string, file: FileWithProgress) => {
     try {
       await fetch(`/file/task-group/${taskGroupId}/ocr`, {
         method: 'POST',
@@ -135,8 +135,15 @@ const useUpload = () => {
           'Content-Type': 'application/json',
         },
       });
-    } catch (error) {
-      console.error('에러', error);
+    } catch (error: any) {
+      // console.error('에러', error);
+      setFiles((prev) =>
+        prev.map((prev_file) =>
+          prev_file.id === file.id
+            ? { ...prev_file, isOcrFailed: true, ocrFailedMessage: error.message }
+            : prev_file,
+        ),
+      );
     }
   };
 
@@ -149,7 +156,7 @@ const useUpload = () => {
         },
       });
     } catch (error) {
-      console.error('에러', error);
+      // console.error('에러', error);
     }
   };
 

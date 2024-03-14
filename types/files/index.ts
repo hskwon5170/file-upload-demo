@@ -1,9 +1,11 @@
 export type FileWithProgress = {
   file: File;
   progress?: number;
-  status: "uploading" | "done" | "error";
+  status: 'uploading' | 'done' | 'error';
   id: number;
   isError?: boolean;
+  isOcrFailed?: boolean;
+  ocrFailedMessage?: string;
 };
 
 export type ProgressAtomProps = {

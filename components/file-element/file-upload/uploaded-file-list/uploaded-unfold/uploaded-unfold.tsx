@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useFileOrderChange } from '@/hooks/useFileOrderChange';
 import { fileAtom, fileExploreTriggerAtom } from '@/atom/files';
 import { useAtom, useSetAtom } from 'jotai';
@@ -17,7 +17,6 @@ export default function UploadedUnfold() {
   const openFileExplorer = useSetAtom(fileExploreTriggerAtom);
 
   const [files, setFiles] = useAtom(fileAtom);
-  console.log('files', files);
   const [isLoading, setIsLoading] = useState(false);
   const [sortProgress, setSortProgress] = useState({
     progress: 0,
@@ -46,11 +45,18 @@ export default function UploadedUnfold() {
     });
   };
 
+  const handleDragStart = <T,>(e: React.DragEvent<T>) => {
+    e.preventDefault();
+  };
+
   if (!files || !files.length) return null;
 
   return (
     <UploadUnfoldLayout>
-      <section className="w-full bg-white border-b-[1px]">
+      <section
+        className="w-full bg-white border-b-[1px]"
+        onDragStart={handleDragStart<HTMLDivElement>}
+      >
         <UploadedFileListHeader sortProgress={sortProgress} />
       </section>
 
@@ -94,7 +100,10 @@ export default function UploadedUnfold() {
 
       <section className="flex h-full items-center justify-center w-full gap-3 bg-white border-t-[1px]">
         <div className="w-full px-10">
-          <div className="flex items-center gap-3 my-3 ml-1">
+          <div
+            className="flex items-center gap-3 my-3 ml-1"
+            onDragStart={handleDragStart<HTMLDivElement>}
+          >
             <input type="checkbox" id="check" className="w-4 h-4 accent-[#5347cf]" />
             <label htmlFor="check" className="cursor-pointer">
               순서대로 PDF 일괄 병합

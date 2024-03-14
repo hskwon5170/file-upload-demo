@@ -16,7 +16,8 @@ type Props = {
 };
 
 export default function PdfViewer({ file, selectedPage, onChange, isOcrAction }: Props) {
-  const { numPages, pdfLoadedStatus, onDocumentLoadSuccess, handlePageRenderSuccess } = useLoadPdf();
+  const { numPages, pdfLoadedStatus, onDocumentLoadSuccess, handlePageRenderSuccess } =
+    useLoadPdf();
   const [isScroll, setIsScroll] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -72,9 +73,6 @@ export default function PdfViewer({ file, selectedPage, onChange, isOcrAction }:
   }, [numPages, isScroll, onChange]);
 
   const allPageLoaded = pdfLoadedStatus.every((status) => status);
-  useEffect(() => {
-    console.log('Selected Page Changed:', selectedPage);
-  }, [selectedPage]);
 
   return (
     <>

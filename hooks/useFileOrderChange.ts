@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { FileWithProgress } from '@/types/files';
 import { useAtom, useSetAtom } from 'jotai';
-import { fileAtom, isOrderChangeAtom } from '@/atom/files';
+import { isBlankSpaceDragAtom, fileAtom, isOrderChangeAtom } from '@/atom/files';
 
 type Props = {
   dragFrom: null | number;
@@ -14,6 +14,7 @@ type DragLiElement = React.DragEvent<HTMLLIElement>;
 
 export const useFileOrderChange = () => {
   const [files, setFiles] = useAtom(fileAtom);
+  const [isBlankSpaceDrag, setIsBlankSpaceDrag] = useAtom(isBlankSpaceDragAtom);
   const setIsOrderChange = useSetAtom(isOrderChangeAtom);
   const [dropTargetIndex, setDropTargetIndex] = useState<number | null>(null);
   const [dragAndDrop, setDragAndDrop] = useState<Props>({
@@ -24,6 +25,12 @@ export const useFileOrderChange = () => {
 
   const onDragStart = (e: DragLiElement) => {
     e.currentTarget.style.opacity = '0.5';
+    // if (['text/plain'].includes(e.dataTransfer.types)) {
+    //   setIsBlankSpaceDrag('text/plain')
+    // }
+    if (e.dataTransfer.types.includes('text/plain')) {
+      setIsBlankSpaceDrag(true);
+    }
 
     // 들어올린 파일의 original 인덱스
     const fromIndex = parseInt(e.currentTarget.dataset.position ?? '');

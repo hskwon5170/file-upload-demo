@@ -20,11 +20,9 @@ export default function FileDropZone() {
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setClose(false);
     const fileArray = e.target.files;
-    console.log('fileArray', fileArray);
     if (!fileArray) return;
 
     for (const SelectedFiles of Array.from(fileArray)) {
-      console.log('SelectedFiles', SelectedFiles);
       // if (!['image/jpeg', 'application/pdf'].includes(fileWithStatus.file.type)) {
       //   alert('지원하지 않는 파일 형식입니다.');
       //   return null;
@@ -61,7 +59,7 @@ export default function FileDropZone() {
       <div>
         <form
           // onClick={openFileExplorer}
-          className="bg-white p-4 rounded-2xl min-h-[14rem] text-center flex flex-col items-center justify-center border-2 border-[#5d51d2] shadow-2xl"
+          className="bg-white p-4 rounded-2xl min-h-[14rem] text-center flex flex-col items-center justify-center border-[1px] border-[#5d51d2] shadow-2xl"
         >
           <input
             ref={inputRef}
@@ -76,7 +74,7 @@ export default function FileDropZone() {
             {/* <IoMdCloudUpload className="text-[60px]" /> */}
             <Image src={cloud_icon} alt="logo" priority />
             <div className="text-md text-[#5d51d2] font-bold">여기에 파일을 업로드 해주세요.</div>
-            <p className="text-sm text-[#5d51d2] font-light">{text}</p>
+            <p className="text-sm text-[#5d51d2] font-normal">{text}</p>
             <Button onClick={onClickButton} className="text-white bg-[#5d51d2] w-52 my-10">
               파일업로드
             </Button>

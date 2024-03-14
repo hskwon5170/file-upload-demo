@@ -52,7 +52,6 @@ export default function FileCards({ file, standard, isDropTarget, index }: Props
   });
 
   const fileCardRef = useRef<HTMLDivElement>(null);
-
   const [isHover, setIsHover] = useState(false);
 
   const handleMouseOver = () => {
