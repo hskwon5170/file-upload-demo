@@ -51,7 +51,6 @@ const useUpload = () => {
   // # 2-1. Task Group 생성하는 1번 단계에서 axios의 onUploadProgress를 이용해서 프로그레스바를 표현해야함
   const handleFileWithTaskGroup = async (fileWithStatus: FileWithProgress, taskGroupId: string) => {
     const formData = new FormData();
-    formData.append('taskGroupId', taskGroupId);
     formData.append('file', fileWithStatus.file);
 
     try {
@@ -61,36 +60,32 @@ const useUpload = () => {
         },
         onUploadProgress: (e) => {
           const percentCompleted = Math.round((e.loaded * 100) / e.total!);
+
           setFiles((prev) => {
-            return prev.map((file) => {
-              if (file.id === fileWithStatus?.id) {
-                return { ...file, progress: percentCompleted };
-              }
-              return file;
-            });
+            return prev.map((prev_file) =>
+              prev_file.id === fileWithStatus?.id
+                ? { ...prev_file, progress: percentCompleted }
+                : prev_file,
+            );
           });
         },
       });
+
       setFiles((prev) =>
-        prev.map((file) =>
-          file?.id === fileWithStatus?.id ? { ...file, status: 'done', progress: 100 } : file,
+        prev.map((prev_file) =>
+          prev_file.id === fileWithStatus?.id
+            ? { ...prev_file, status: 'done', progress: 100 }
+            : prev_file,
         ),
       );
     } catch (error) {
-      setFiles((prev) => {
-        return prev.map((file) => {
-          if (file.id === fileWithStatus?.id) {
-            return {
-              ...file,
-              status: 'error',
-              progress: 0,
-              isError: true,
-            };
-          } else {
-            return file;
-          }
-        });
-      });
+      setFiles((prev) =>
+        prev.map((prev_file) =>
+          prev_file.id === fileWithStatus?.id
+            ? { ...prev_file, status: 'error', progress: 0, isError: true }
+            : prev_file,
+        ),
+      );
     }
   };
 

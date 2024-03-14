@@ -44,14 +44,14 @@ export default function EntireDropzoneLayout({ children, isModal }: Props) {
     setDragCounter(0);
     setClose(false);
 
-    for (const newFile of Array.from(e.dataTransfer.files)) {
-      const [isValid, errorMsg] = validateFileType(newFile.type);
+    for (const droppedFile of Array.from(e.dataTransfer.files)) {
+      const [isValid, errorMsg] = validateFileType(droppedFile.type);
       if (!isValid) {
         alert(errorMsg);
         continue;
       }
-      const handledFile = await checkAlreadyUploaded(newFile);
-      UploadFile(handledFile as FileWithProgress);
+      const checkedFile = await checkAlreadyUploaded(droppedFile);
+      UploadFile(checkedFile as FileWithProgress);
     }
   };
 

@@ -5,7 +5,10 @@ import { useRef, useEffect } from 'react';
 import { IoMdCloudUpload } from 'react-icons/io';
 import useUpload from '@/hooks/useUpload';
 import useHandleFile from '@/hooks/useHandleFile';
+import cloud_icon from '@/public/cloud.png';
 import type { FileWithProgress } from '@/types/files';
+import Image from 'next/image';
+import Button from '../uploaded-file-list/buttons/buttons';
 
 export default function FileDropZone() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -17,6 +20,7 @@ export default function FileDropZone() {
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setClose(false);
     const fileArray = e.target.files;
+    console.log('fileArray', fileArray);
     if (!fileArray) return;
 
     for (const SelectedFiles of Array.from(fileArray)) {
@@ -37,6 +41,12 @@ export default function FileDropZone() {
     }
   };
 
+  const onClickButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    openFileExplorer();
+  };
+
   // 업로드 상태 모듈에서 파일 추가 버튼 클릭
   const [trigger, setTrigger] = useAtom(fileExploreTriggerAtom);
   useEffect(() => {
@@ -47,11 +57,11 @@ export default function FileDropZone() {
   }, [trigger, setTrigger]);
 
   return (
-    <div className="flex items-center justify-center">
+    <div>
       <div>
         <form
-          className="bg-gray-100 p-4 w-[800px] rounded-2xl min-h-[14rem] text-center flex flex-col items-center justify-center cursor-pointer border-2"
-          onClick={openFileExplorer}
+          // onClick={openFileExplorer}
+          className="bg-white p-4 rounded-2xl min-h-[14rem] text-center flex flex-col items-center justify-center border-2 border-[#5d51d2] shadow-2xl"
         >
           <input
             ref={inputRef}
@@ -63,11 +73,18 @@ export default function FileDropZone() {
             hidden
           />
           <div className="flex flex-col items-center justify-center gap-3 text-gray-500">
-            <IoMdCloudUpload className="text-[60px]" />
-            <div className="my-6 text-2xl font-bold">파일을 업로드하세요</div>
+            {/* <IoMdCloudUpload className="text-[60px]" /> */}
+            <Image src={cloud_icon} alt="logo" priority />
+            <div className="text-md text-[#5d51d2] font-bold">여기에 파일을 업로드 해주세요.</div>
+            <p className="text-sm text-[#5d51d2] font-light">{text}</p>
+            <Button onClick={onClickButton} className="text-white bg-[#5d51d2] w-52 my-10">
+              파일업로드
+            </Button>
           </div>
         </form>
       </div>
     </div>
   );
 }
+
+const text = '* 50MB 이하의 Jpg, Jpeg, Png, Pdf 파일만 업로드 할 수 있습니다. (최대 10개) ​';

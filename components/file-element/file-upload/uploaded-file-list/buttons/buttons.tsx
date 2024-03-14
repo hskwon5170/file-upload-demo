@@ -1,7 +1,7 @@
 type Props = {
   className?: string;
   children: React.ReactNode;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   isLoading?: boolean;
 };
 export default function Button({

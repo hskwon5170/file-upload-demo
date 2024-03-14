@@ -29,13 +29,15 @@ const useHandleFile = () => {
       const isAlreadyUploaded = isFileAlreadyUploaded(newFile, files);
 
       if (isAlreadyUploaded) {
-        const prompt = window.confirm(
+        const confirm = window.confirm(
           `${newFile.name}은 이미 업로드된 파일입니다. 다시 업로드하시겠습니까?`,
         );
-        if (!prompt) return;
+        if (!confirm) return;
 
         setFiles((prev) =>
-          prev.map((file) => (file.id === fileWithStatus.id ? fileWithStatus : file)),
+          prev.map((prev_file) =>
+            prev_file.id === fileWithStatus.id ? fileWithStatus : prev_file,
+          ),
         );
       } else {
         setFiles((prev) => [...prev, fileWithStatus]);
