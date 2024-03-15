@@ -57,6 +57,7 @@ export const useFileOrderChange = () => {
 
   const onDrop = (e: DragLiElement) => {
     e.preventDefault();
+
     const { originalOrder, dragFrom, dragTo } = dragAndDrop;
 
     const originalOrderList = originalOrder;
@@ -95,6 +96,7 @@ export const useFileOrderChange = () => {
 
   const onDragLeave = (e: DragLiElement) => {
     e.preventDefault();
+
     // console.log('드래그가 끝나서 마우스가 대상 객체의 위에서 벗어날때 발생함');
     setDropTargetIndex(null);
 

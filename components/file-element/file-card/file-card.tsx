@@ -12,12 +12,12 @@ import { RxDragHandleDots2 } from 'react-icons/rx';
 
 type Props = {
   file: FileWithProgress;
-  standard: boolean;
   isDropTarget?: boolean;
   index?: number;
+  ocrFailedExists: boolean;
 };
 
-export default function FileCards({ file, standard, isDropTarget, index }: Props) {
+export default function FileCards({ file, isDropTarget, index, ocrFailedExists }: Props) {
   const removeFile = useSetAtom(removeFileAtom);
 
   // const fileExtension = file.file?.type.split('/')[1];
@@ -76,17 +76,20 @@ export default function FileCards({ file, standard, isDropTarget, index }: Props
       <animated.div
         ref={fileCardRef}
         data-tooltip-id="my-tooltip"
-        className=" flex items-center w-full h-12 gap-5 my-3 cursor-pointer  px-6  hover:bg-gray-100 duration-300 transition-all ease-in-out"
+        className={`flex items-center w-full h-12 gap-5 my-3  px-6 duration-300 transition-all ease-in-out select-none ${ocrFailedExists ? null : 'hover:bg-gray-100 cursor-move'}`}
         style={openSprings}
       >
-        <div className="flex items-center justify-center">
-          <RxDragHandleDots2 className="text-xl text-gray-500" />
-        </div>
+        {!ocrFailedExists && (
+          <div className="flex items-center justify-center">
+            <RxDragHandleDots2 className="text-xl text-gray-500" />
+          </div>
+        )}
 
         <IndexIconWithAction
           isHover={isHover}
           onClick={() => removeFile(file)}
           index={index as number}
+          ocrFailedExists={ocrFailedExists}
         />
         <div className="flex items-center flex-1 w-72">
           <animated.div
@@ -107,7 +110,12 @@ export default function FileCards({ file, standard, isDropTarget, index }: Props
             </div>
           </div>
         </div>
-        <StatusIcon progress={file?.progress ?? 0} isError={file?.isError ?? false} />
+        {ocrFailedExists && <p className="text-sm">파일명 인식 불가</p>}
+        <StatusIcon
+          progress={file?.progress ?? 0}
+          isError={file?.isError ?? false}
+          ocrFailedExists={ocrFailedExists}
+        />
       </animated.div>
     </animated.div>
   );

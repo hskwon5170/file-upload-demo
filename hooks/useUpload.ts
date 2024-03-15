@@ -21,7 +21,7 @@ const useUpload = () => {
           setFiles((prev) => {
             return prev.map((file) => {
               return file.id === fileWithStatus?.id
-                ? { ...file, progress: percentCompleted }
+                ? { ...file, progress: percentCompleted, isOcrFailed: false }
                 : file;
             });
           });
@@ -59,13 +59,11 @@ const useUpload = () => {
           'Content-Type': 'multipart/form-data',
         },
         onUploadProgress: (e) => {
-          const percentCompleted = Math.round((e.loaded * 100) / e.total!);
+          const progress = Math.round((e.loaded * 100) / e.total!);
 
           setFiles((prev) => {
             return prev.map((prev_file) =>
-              prev_file.id === fileWithStatus?.id
-                ? { ...prev_file, progress: percentCompleted }
-                : prev_file,
+              prev_file.id === fileWithStatus?.id ? { ...prev_file, progress } : prev_file,
             );
           });
         },

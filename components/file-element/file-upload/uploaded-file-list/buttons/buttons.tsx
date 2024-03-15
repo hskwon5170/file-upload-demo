@@ -14,7 +14,7 @@ export default function Button({
     <button
       disabled={isLoading}
       onClick={onClick}
-      className={`${className} ${isLoading ? 'bg-gray-500 bg-opacity-30' : null} flex-1 h-10 rounded-xl p-3 flex items-center justify-center shadow-xl border`}
+      className={`${className} ${isLoading ? 'bg-gray-500 bg-opacity-30' : null} flex-1 h-10 rounded-xl p-3 flex items-center justify-center shadow-xl border hover:bg-indigo-500 transition-all duration-300 ease-in-out`}
     >
       {children}
     </button>

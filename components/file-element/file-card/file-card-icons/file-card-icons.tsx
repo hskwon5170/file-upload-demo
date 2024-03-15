@@ -1,40 +1,42 @@
 import LoadingSpinner from '@/components/loading-spinner/loading-spinner';
+import { useSpring, animated } from '@react-spring/web';
 import { FaCheck } from 'react-icons/fa';
 import { FaExclamation } from 'react-icons/fa6';
-import { FaCrown } from 'react-icons/fa6';
 import { MdClose } from 'react-icons/md';
 
-export const StatusIcon = ({ progress, isError }: { progress: number; isError: boolean }) => {
+type Props = {
+  progress: number;
+  isError: boolean;
+  ocrFailedExists: boolean;
+};
+
+export const StatusIcon = ({ progress, isError, ocrFailedExists }: Props) => {
+  if (ocrFailedExists) {
+    return <ErrorIcon />;
+  }
+
   return (
-    <div className="flex items-center justify-center">
-      {progress === 100 && (
-        <div className="flex justify-center items-center bg-[#03c73c] w-5 h-5 rounded-full p-1">
-          <FaCheck className="text-white" />
-        </div>
-      )}
-
+    <>
+      {progress === 100 && <SuccessIcon />}
       {progress < 100 && !isError && <LoadingSpinner />}
+      {isError && <ErrorIcon />}
+    </>
+  );
+};
 
-      {isError && (
-        <div className="flex items-center justify-center w-5 h-5 font-extrabold bg-red-500 rounded-full p-1">
-          <FaExclamation className="text-white" />
-        </div>
-      )}
+const SuccessIcon = () => {
+  return (
+    <div className="flex justify-center items-center bg-[#03c73c] w-5 h-5 rounded-full p-1">
+      <FaCheck className="text-white" />
     </div>
   );
 };
 
-export const CrownIcon = ({ standard }: { standard: boolean }) => {
+const ErrorIcon = () => {
   return (
-    <>
-      {standard ? (
-        <div className="w-5 h-5">
-          <FaCrown />
-        </div>
-      ) : (
-        <div className="w-5 h-5"></div>
-      )}
-    </>
+    <div className="flex items-center justify-center w-5 h-5 font-extrabold bg-red-500 rounded-full p-1">
+      <FaExclamation className="text-white" />
+    </div>
   );
 };
 
@@ -42,11 +44,14 @@ export const IndexIconWithAction = ({
   isHover,
   onClick,
   index,
+  ocrFailedExists,
 }: {
   isHover: boolean;
   onClick: () => void;
   index: number;
+  ocrFailedExists: boolean;
 }) => {
+  if (ocrFailedExists) return null;
   return (
     <div className="w-2 flex items-center justify-center cursor-pointer">
       {isHover ? (
