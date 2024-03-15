@@ -1,10 +1,10 @@
 'use client';
 import useHandleFile from '@/hooks/useHandleFile';
 import useUpload from '@/hooks/useUpload';
-import { DragEvent, useState, useEffect } from 'react';
+import { DragEvent, useState, useEffect, useMemo } from 'react';
 import EntireDropzonePannel from './entire-dropzone-pannel';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { closeAtom, isBlankSpaceDragAtom, isOrderChangeAtom } from '@/atom/files';
+import { closeAtom, fileAtom, isBlankSpaceDragAtom, isOrderChangeAtom } from '@/atom/files';
 import type { FileWithProgress } from '@/types/files';
 
 type Props = {
@@ -20,6 +20,10 @@ export default function EntireDropzoneLayout({ children, isModal }: Props) {
   const isBlankSpaceDrag = useAtomValue(isBlankSpaceDragAtom);
   const setClose = useSetAtom(closeAtom);
   const isOrderChange = useAtomValue(isOrderChangeAtom);
+  const files = useAtomValue(fileAtom);
+
+  // const isOcrFailedExists = files.some((file) => file.isOcrFailed);
+  const isOcrFailedExists = useMemo(() => files.some((file) => file.isOcrFailed), [files]);
 
   useEffect(() => {
     // 파일 순서 변경X, dragCounter가 0
@@ -39,6 +43,7 @@ export default function EntireDropzoneLayout({ children, isModal }: Props) {
   }, [dragCounter, isOrderChange]);
 
   const handleDrop = async (e: DragEvent) => {
+    if (isOcrFailedExists) return;
     e.preventDefault();
     e.stopPropagation();
     setDragCounter(0);
@@ -56,22 +61,24 @@ export default function EntireDropzoneLayout({ children, isModal }: Props) {
   };
 
   const handleDragOver = (e: DragEvent) => {
+    if (isOcrFailedExists) return;
     e.preventDefault();
     e.stopPropagation();
   };
 
   const handleDragEnter = (e: DragEvent) => {
+    if (isOcrFailedExists) return;
     e.preventDefault();
     e.stopPropagation();
     setDragCounter((prev) => prev + 1);
   };
 
   const handleDragLeave = (e: DragEvent) => {
+    if (isOcrFailedExists) return;
     e.preventDefault();
     e.stopPropagation();
     setDragCounter((prev) => prev - 1);
   };
-  console.log('isOrderChange', isOrderChange);
   return (
     <div
       style={isModal ? modalStyle : {}}
@@ -83,7 +90,7 @@ export default function EntireDropzoneLayout({ children, isModal }: Props) {
       onDragLeave={handleDragLeave}
     >
       {children}
-      {dragActive && isOrderChange === false && !isBlankSpaceDrag && (
+      {dragActive && isOrderChange === false && !isBlankSpaceDrag && !isOcrFailedExists && (
         <div
           style={isModal ? modalStyle : {}}
           className="absolute inset-0 flex justify-center items-center border-8 z-50  border-[#5d51d2] bg-white bg-opacity-30 backdrop-blur-lg"

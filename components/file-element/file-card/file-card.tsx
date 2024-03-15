@@ -23,17 +23,11 @@ export default function FileCards({ file, isDropTarget, index, ocrFailedExists }
   // const fileExtension = file.file?.type.split('/')[1];
 
   const openSprings = useSpring({
-    from: { opacity: 0.1, scale: 0.9, y: -20, rotate: -5 },
-    to: { opacity: 1, scale: 1, y: 0, rotate: 0 },
-    config: { duration: 50, tension: 200, friction: 15 },
+    from: { opacity: 0.05, scale: 0.9, y: -30 },
+    to: { opacity: 1, scale: 1, y: 0 },
+    config: { duration: 100, velocity: 10 },
+    delay: 150,
   });
-
-  // const openSprings = useSpring({
-  //   from: { opacity: 0.05, scale: 0.9, x: -30 },
-  //   to: { opacity: 1, scale: 1, x: 0 },
-  //   config: { duration: 100, velocity: 10 },
-  //   delay: 150,
-  // });
 
   const iconSprings = useSpring({
     from: { transform: 'scale(0.8)', opacity: 0 },
@@ -48,7 +42,7 @@ export default function FileCards({ file, isDropTarget, index, ocrFailedExists }
     backgroundColor: isDropTarget ? '#F8F0FF' : '#ffffff',
     // config: { tension: 300, friction: 10 },
     // config: { tension: 120, friction: 14 },
-    config: { tension: 100, friction: 7 },
+    config: { tension: 100, friction: 7, mass: 1 },
   });
 
   const fileCardRef = useRef<HTMLDivElement>(null);
@@ -81,7 +75,7 @@ export default function FileCards({ file, isDropTarget, index, ocrFailedExists }
       >
         {!ocrFailedExists && (
           <div className="flex items-center justify-center">
-            <RxDragHandleDots2 className="text-xl text-gray-500" />
+            <RxDragHandleDots2 className="text-sm text-gray-500" />
           </div>
         )}
 
@@ -96,14 +90,14 @@ export default function FileCards({ file, isDropTarget, index, ocrFailedExists }
             className="flex items-center justify-center p-2 bg-gray-100 rounded-lg w-10 h-10"
             style={iconSprings}
           >
-            <AiFillFile className="w-8 h-8 text-gray-600" />
+            <AiFillFile className="w-5 h-5 text-gray-600" />
             {/* <FileIcon extension={fileExtension} /> */}
           </animated.div>
           <div className="p-2">
             <div className="flex items-center justify-between">
               <div className="flex flex-col p-3 gap-2">
                 <div className="flex items-center gap-3">
-                  <div className="font-bold text-sm truncate max-w-60">{file?.file.name}</div>
+                  <div className="font-semibold text-xs truncate max-w-60">{file?.file.name}</div>
                 </div>
                 <div className="text-[10px] text-gray-500">{ConvertSize(file?.file.size)}</div>
               </div>

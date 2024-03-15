@@ -12,7 +12,7 @@ type Props = {
 
 type DragLiElement = React.DragEvent<HTMLLIElement>;
 
-export const useFileOrderChange = () => {
+export const useFileOrderChange = ({ ocrFailedExists }: { ocrFailedExists: boolean }) => {
   const [files, setFiles] = useAtom(fileAtom);
   const [isBlankSpaceDrag, setIsBlankSpaceDrag] = useAtom(isBlankSpaceDragAtom);
   const setIsOrderChange = useSetAtom(isOrderChangeAtom);
@@ -24,6 +24,7 @@ export const useFileOrderChange = () => {
   });
 
   const onDragStart = (e: DragLiElement) => {
+    if (ocrFailedExists) return;
     e.currentTarget.style.opacity = '0.5';
     // if (['text/plain'].includes(e.dataTransfer.types)) {
     //   setIsBlankSpaceDrag('text/plain')
@@ -31,6 +32,8 @@ export const useFileOrderChange = () => {
     if (e.dataTransfer.types.includes('text/plain')) {
       setIsBlankSpaceDrag(true);
     }
+
+    setIsOrderChange(true);
 
     // 들어올린 파일의 original 인덱스
     const fromIndex = parseInt(e.currentTarget.dataset.position ?? '');
@@ -43,11 +46,11 @@ export const useFileOrderChange = () => {
   };
 
   const onDragOver = (e: DragLiElement) => {
+    if (ocrFailedExists) return;
     // console.log(' 드래그하면서 마우스가 대상 객체 위에 자리잡고있을때 발생');
 
     // 모달에 파일드랍 동작과 파일 순서 드래그 변경 구분을 위한 추가 상태
     setIsOrderChange(true);
-
     e.preventDefault();
     const overIndex = parseInt(e.currentTarget.dataset.position ?? '');
     if (dropTargetIndex !== overIndex) {
@@ -56,6 +59,7 @@ export const useFileOrderChange = () => {
   };
 
   const onDrop = (e: DragLiElement) => {
+    if (ocrFailedExists) return;
     e.preventDefault();
 
     const { originalOrder, dragFrom, dragTo } = dragAndDrop;
@@ -95,6 +99,7 @@ export const useFileOrderChange = () => {
   };
 
   const onDragLeave = (e: DragLiElement) => {
+    if (ocrFailedExists) return;
     e.preventDefault();
 
     // console.log('드래그가 끝나서 마우스가 대상 객체의 위에서 벗어날때 발생함');
@@ -107,6 +112,7 @@ export const useFileOrderChange = () => {
   };
 
   const onDragEnd = (e: DragLiElement) => {
+    if (ocrFailedExists) return;
     e.currentTarget.style.opacity = '1';
     setIsOrderChange(false);
   };

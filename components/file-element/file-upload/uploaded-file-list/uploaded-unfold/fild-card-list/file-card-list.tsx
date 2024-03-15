@@ -9,7 +9,7 @@ type Props = {
 
 export default function FileCardList({ files, ocrFailedExists }: Props) {
   const { onDragStart, onDragOver, onDrop, onDragLeave, onDragEnd, dropTargetIndex } =
-    useFileOrderChange();
+    useFileOrderChange({ ocrFailedExists });
 
   return (
     <>
