@@ -12,7 +12,7 @@ type Props = {
 export default function ModalMain({ isLoading, files, ocrFailedExists }: Props) {
   return (
     <section
-      className={`w-full relative px-4 min-h-[300px] overflow-y-auto overflow-x-hidden border-t-[1px] border-b-[1px] ${styles['list']}`}
+      className={`w-full relative px-4 min-h-[300px] sm:min-h-[400px] overflow-y-auto overflow-x-hidden border-t-[1px] border-b-[1px] ${styles['list']}`}
       style={{
         maxHeight: `calc(100% - ${buttonSectionHeight} - 4rem)`,
       }}

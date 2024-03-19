@@ -2,7 +2,7 @@ import LoadingSpinner from '@/components/loading-spinner/loading-spinner';
 
 export default function SortFallback() {
   return (
-    <div className="w-full h-[300px] overflow-y-hidden">
+    <div className="w-full h-[300px] overflow-y-hidden sm:h-[400px] sm:mt-10">
       <div className="mt-16 flex flex-col items-center justify-start gap-4 ">
         <LoadingSpinner />
         <div className="font-bold text-gray-800 text-xl">AI 자동 분류중입니다</div>

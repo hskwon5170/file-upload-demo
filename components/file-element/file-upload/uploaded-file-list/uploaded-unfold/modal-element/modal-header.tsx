@@ -23,7 +23,7 @@ export default function ModalHeader({ sortProgress, ocrFailedExists, files }: Pr
 
   if (ocrFailedExists) {
     return (
-      <section className="flex flex-col items-start gap-3 mb-3 select-none ">
+      <section className="flex flex-col items-start gap-3 mb-3 select-none sm:px-12">
         <div className="text-indigo-700 font-bold flex items-center gap-3">
           <p className="text-lg">자동 분류 실패</p>
           <div className="bg-indigo-700 w-5 h-5 text-sm rounded-full flex justify-center items-center p-2 text-white">
@@ -31,7 +31,10 @@ export default function ModalHeader({ sortProgress, ocrFailedExists, files }: Pr
           </div>
         </div>
         <div className="text-red-500 text-sm my-2 underline decoration-1 tracking-wide underline-offset-2">
-          <div>자동 분류에 실패한 파일이 있습니다. 해당 파일은 업로드 되지 않습니다.</div>
+          <div>
+            자동 분류에 실패한 파일이 있습니다. <br className="hidden sm:block" />
+            해당 파일은 업로드 되지 않습니다.
+          </div>
           <div>자동 분류 실패 사유를 확인하고 다시 업로드를 시도해주세요.</div>
         </div>
       </section>

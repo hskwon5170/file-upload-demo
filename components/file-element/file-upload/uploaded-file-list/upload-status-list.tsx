@@ -6,7 +6,7 @@ export default function UploadStatusList() {
   return (
     <UploadStatusListLayout>
       <EntireDropzoneLayout isModal>
-        <div className="relative right-10 bottom-10">
+        <div className="relative right-10 bottom-10 sm:right-0 sm:z-20">
           <FileModal />
         </div>
       </EntireDropzoneLayout>

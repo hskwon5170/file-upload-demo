@@ -30,8 +30,8 @@ export default function ModalFooter({
   }
 
   return (
-    <section className="flex h-full items-center justify-center w-full gap-3 bg-white select-none">
-      <div className="w-full px-10">
+    <section className="flex h-full items-center justify-center w-full gap-3 bg-white select-none sm:px-3">
+      <div className="w-full px-10 ">
         <div
           className="flex items-center gap-3 my-3 ml-1"
           onDragStart={handleDragStart<HTMLDivElement>}

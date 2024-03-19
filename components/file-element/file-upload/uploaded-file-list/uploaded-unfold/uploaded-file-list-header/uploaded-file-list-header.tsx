@@ -36,8 +36,8 @@ export default function UploadedFileListHeader({ sortProgress }: Props) {
   };
 
   return (
-    <div className="flex flex-col items-center w-full px-6">
-      <div className="flex items-center w-full px-3">
+    <div className="flex flex-col items-center w-full px-6 sm:px-6">
+      <div className="flex items-center w-full px-3 sm:px-5">
         <div className="flex-1">
           <span className="font-extrabold text-[#5347cf]">{uploadedFiles.length}</span>/{' '}
           {files.length}개 <span className="font-extrabold">완료</span>

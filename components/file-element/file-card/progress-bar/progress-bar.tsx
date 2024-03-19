@@ -23,7 +23,9 @@ type Props = {
 };
 export default function ProgressBar({ progress, isError }: Props) {
   return (
-    <div className={`w-[430px] h-2  rounded-full ${isError ? 'bg-red-200' : 'bg-[#f3e8ff]'} my-6`}>
+    <div
+      className={`w-[430px] h-2  rounded-full ${isError ? 'bg-red-200' : 'bg-[#f3e8ff]'} my-6 sm:w-[330px]`}
+    >
       {!isError && (
         <div
           style={{

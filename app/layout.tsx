@@ -36,7 +36,7 @@ export default function RootLayout({
             </div>
 
             <div className="fixed top-0 left-[200px] right-[200px] flex flex-col h-screen">
-              <div className="p-4 text-black bg-gray-200 z-10 hidden sm:hidden">Header</div>
+              <div className="p-4 text-black bg-gray-200 z-10 sm:hidden">Header</div>
               <div className="overflow-y-auto flex-1 ">{children}</div>
             </div>
 
@@ -47,7 +47,7 @@ export default function RootLayout({
 
           {modal}
           <div>{filelist}</div>
-          <div className="fixed bottom-6 right-6 hidden sm:block sm:z-40">{floatfiletrigger}</div>
+          <div className="fixed bottom-6 right-6 hidden sm:block sm:z-10">{floatfiletrigger}</div>
 
           <div className="fixed top-0 right-2">{previewimage}</div>
         </body>

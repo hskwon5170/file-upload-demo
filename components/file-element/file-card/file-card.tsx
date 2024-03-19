@@ -70,11 +70,11 @@ export default function FileCards({ file, isDropTarget, index, ocrFailedExists }
       <animated.div
         ref={fileCardRef}
         data-tooltip-id="my-tooltip"
-        className={`flex items-center w-full h-12 gap-5 my-3  px-6 duration-300 transition-all ease-in-out select-none ${ocrFailedExists ? null : 'hover:bg-gray-100 cursor-move'}`}
+        className={`flex items-center w-full h-12 gap-5 my-3  px-6 sm:px-9 duration-300 transition-all ease-in-out select-none ${ocrFailedExists ? null : 'hover:bg-gray-100 cursor-move'}`}
         style={openSprings}
       >
         {!ocrFailedExists && (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center sm:hidden">
             <RxDragHandleDots2 className="text-sm text-gray-500" />
           </div>
         )}
@@ -98,7 +98,7 @@ export default function FileCards({ file, isDropTarget, index, ocrFailedExists }
               <div className="flex flex-col p-3 gap-2">
                 <div className="flex items-center gap-3">
                   <div
-                    className={`font-semibold text-xs truncate ${ocrFailedExists ? 'max-w-44' : 'max-w-60'}`}
+                    className={`font-semibold text-xs truncate sm:max-w-32 ${ocrFailedExists ? 'max-w-44' : 'max-w-60'}`}
                   >
                     {file?.file.name}
                   </div>
