@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { fileAtom, fileExploreTriggerAtom, ocrFailStatusAtom } from '@/atom/files';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import UploadUnfoldLayout from './upload-unfold-layout';
 import '../uploaded-unfold/uploaded-unfold.css';
 import './uploaded-unfold.css';
@@ -12,16 +12,13 @@ import ModalMain from './modal-element/modal-main';
 
 export default function FileModal() {
   const openFileExplorer = useSetAtom(fileExploreTriggerAtom);
-  const files = useAtomValue(fileAtom);
+  const [files, setFiles] = useAtom(fileAtom);
   const ocrFailedExists = useMemo(() => files.some((file) => file.isOcrFailed === true), [files]);
-  console.log('files', files);
   const [isLoading, setIsLoading] = useState(false);
   const [sortProgress, setSortProgress] = useState({
     progress: 0,
     isSort: false,
   });
-
-  // console.log('ocrFailedFiles', ocrFailedFiles);
 
   const handleSort = () => {
     setSortProgress((prev) => ({ ...prev, progress: 0, isSort: true }));
@@ -42,6 +39,15 @@ export default function FileModal() {
     });
   };
 
+  const onClickConfirm = () => {
+    setFiles((prev) =>
+      prev.map((prev_file) => ({
+        ...prev_file,
+        isOcrFailed: false,
+      })),
+    );
+  };
+
   if (!files || !files.length) return null;
 
   return (
@@ -53,6 +59,7 @@ export default function FileModal() {
         openFileExplorer={openFileExplorer}
         handleSort={handleSort}
         ocrFailedExists={ocrFailedExists}
+        ocrFailedConfirm={onClickConfirm}
       />
     </UploadUnfoldLayout>
   );

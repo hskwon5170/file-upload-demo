@@ -18,33 +18,36 @@ export default function RootLayout({
   modal,
   filelist,
   previewimage,
+  floatfiletrigger,
 }: {
   children: React.ReactNode;
   modal: React.ReactNode;
   filelist: React.ReactNode;
   previewimage: React.ReactNode;
+  floatfiletrigger: React.ReactNode;
 }) {
   return (
     <html lang="en">
       <Provider>
         <body className={noto.className + ' flex flex-col'}>
           <div className="flex">
-            <div className="w-[200px] bg-gray-200 p-4 fixed h-full top-0 left-0 flex justify-center items-center flex-col">
+            <div className="w-[200px] bg-gray-200 p-4 fixed h-full top-0 left-0 flex justify-center items-center flex-col sm:hidden">
               Left Sidebar
             </div>
 
             <div className="fixed top-0 left-[200px] right-[200px] flex flex-col h-screen">
-              <div className="p-4 text-black bg-gray-200 z-10">Header</div>
-              <div className="overflow-y-auto flex-1">{children}</div>
+              <div className="p-4 text-black bg-gray-200 z-10 hidden sm:hidden">Header</div>
+              <div className="overflow-y-auto flex-1 ">{children}</div>
             </div>
 
-            <div className="w-[200px] bg-gray-200 p-4 fixed h-full top-0 right-0 flex justify-center items-center flex-col">
+            <div className="w-[200px] bg-gray-200 p-4 fixed h-full top-0 right-0 flex justify-center items-center flex-col sm:hidden">
               Right Sidebar
             </div>
           </div>
 
           {modal}
           <div>{filelist}</div>
+          <div className="fixed bottom-6 right-6 hidden sm:block sm:z-40">{floatfiletrigger}</div>
 
           <div className="fixed top-0 right-2">{previewimage}</div>
         </body>

@@ -1,13 +1,11 @@
-import { useSetAtom } from 'jotai';
 import Button from '../../buttons/buttons';
-import { closeAtom } from '@/atom/files';
-import { FileWithProgress } from '@/types/files';
 
 type Props = {
   isLoading: boolean;
   openFileExplorer: (val: boolean) => void;
   handleSort: () => void;
   ocrFailedExists: boolean;
+  ocrFailedConfirm?: () => void;
 };
 
 export default function ModalFooter({
@@ -15,17 +13,16 @@ export default function ModalFooter({
   openFileExplorer,
   handleSort,
   ocrFailedExists,
+  ocrFailedConfirm = () => {},
 }: Props) {
   const handleDragStart = <T,>(e: React.DragEvent<T>) => {
     e.preventDefault();
   };
 
-  const setClose = useSetAtom(closeAtom);
-
   if (ocrFailedExists) {
     return (
       <div className="flex h-full items-center justify-center select-none">
-        <Button onClick={() => setClose(true)} className="text-white bg-indigo-700 w-40">
+        <Button onClick={ocrFailedConfirm} className="text-white bg-indigo-700 w-40">
           확인
         </Button>
       </div>

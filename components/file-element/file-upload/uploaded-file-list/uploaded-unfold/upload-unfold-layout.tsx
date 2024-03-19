@@ -14,7 +14,7 @@ export default function UploadUnfoldLayout({ children }: Props) {
     <div className={`${close ? 'hidden' : null} `}>
       {/* <div>{header}</div> */}
       <div
-        className={`flex flex-col items-center rounded-xl shadow-2xl py-3 h-[500px] w-[500px] overflow-hidden bg-white relative
+        className={`flex flex-col items-center rounded-xl shadow-2xl py-3 h-[500px] w-[500px] overflow-hidden bg-white relative 
     ${minimize ? 'hidden' : ''}`}
       >
         {children}

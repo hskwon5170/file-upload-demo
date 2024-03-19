@@ -1,6 +1,6 @@
 import { FileWithProgress } from '@/types/files';
 import SortFallback from '../sort-fallback/sort-fallback';
-import FileCardList from '../fild-card-list/file-card-list';
+import FileCardList from '../file-card-list/file-card-list';
 import styles from '../uploded-unfold.module.css';
 
 type Props = {
