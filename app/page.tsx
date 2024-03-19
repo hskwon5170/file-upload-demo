@@ -1,5 +1,4 @@
 import EntireDropzoneLayout from '@/components/entire-dropzone-layout.tsx/entire-dropzone-layout';
-import FileList from '@/components/file-element/file-list/file-list';
 import FileModule from '@/components/file-element/file-upload/file-module';
 
 export default async function Main() {
