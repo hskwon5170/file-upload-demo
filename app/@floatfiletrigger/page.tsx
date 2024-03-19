@@ -9,7 +9,7 @@ export default function Page() {
   return (
     <div
       onClick={() => openFileExplorer(true)}
-      className="flex justify-center items-center size-10 bg-indigo-600 rounded-full p-1 text-white text-2xl font-bold"
+      className="flex justify-center items-center size-11 bg-indigo-600 rounded-full p-1 text-white text-2xl font-bold"
     >
       <GoPlus />
     </div>

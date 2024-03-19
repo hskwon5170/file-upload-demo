@@ -98,7 +98,7 @@ export default function FileCards({ file, isDropTarget, index, ocrFailedExists }
               <div className="flex flex-col p-3 gap-2">
                 <div className="flex items-center gap-3">
                   <div
-                    className={`font-semibold text-xs truncate sm:max-w-32 ${ocrFailedExists ? 'max-w-44' : 'max-w-60'}`}
+                    className={`font-semibold text-xs truncate ${ocrFailedExists ? 'max-w-44 sm:max-w-28' : 'max-w-60  sm:max-w-40'}`}
                   >
                     {file?.file.name}
                   </div>
@@ -108,7 +108,9 @@ export default function FileCards({ file, isDropTarget, index, ocrFailedExists }
             </div>
           </div>
         </div>
-        {ocrFailedExists && <p className="text-sm w-28">파일명 인식 불가</p>}
+        {ocrFailedExists && (
+          <p className="text-sm w-28 sm:bg-blue-200 sm:max-w-16">파일명 인식 불가</p>
+        )}
         <StatusIcon
           progress={file?.progress ?? 0}
           isError={file?.isError ?? false}
