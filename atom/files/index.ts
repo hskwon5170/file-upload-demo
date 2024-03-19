@@ -18,3 +18,5 @@ export const fileExploreTriggerAtom = atom(false);
 export const isOrderChangeAtom = atom(false);
 export const isBlankSpaceDragAtom = atom(false);
 export const shouldShowDragPanel = atom(false);
+
+export const ocrFailStatusAtom = atom(false);

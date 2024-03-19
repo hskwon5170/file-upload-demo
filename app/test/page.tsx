@@ -1,17 +1,14 @@
 'use client';
 import { closeAtom } from '@/atom/files';
 import FileDragActivePannel from '@/components/file-element/file-drag-active-pannel/file-drag-active.pannel';
-import create from '@/lib/add-file';
-import axios from 'axios';
+import create from './action';
 import { useSetAtom } from 'jotai';
-import { DragEvent, useRef, useState } from 'react';
+import { DragEvent, FormEvent, useRef, useState } from 'react';
 import { useFormState } from 'react-dom';
 import { IoMdCloudUpload } from 'react-icons/io';
 
 export default function Test() {
-  //   const [state, formAction] = useFormState(create, {});
-  //   console.log('state', state);
-
+  // const [state, formAction] = useFormState(create, null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
   const setClose = useSetAtom(closeAtom);
@@ -63,13 +60,14 @@ export default function Test() {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          // action={formAction}
+          // action={(formData) => formAction(formData)}
         >
           <input
             placeholder="fileInput"
             // type="file"
             type="submit"
-            id="files"
+            id="image"
+            name="image"
             accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf"
             hidden
           />
@@ -83,7 +81,7 @@ export default function Test() {
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={openFileExplorer}
-          action={create}
+          // action={formAction}
         >
           <input
             ref={inputRef}

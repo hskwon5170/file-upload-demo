@@ -7,7 +7,7 @@ import { MdClose } from 'react-icons/md';
 type Props = {
   progress: number;
   isError: boolean;
-  ocrFailedExists: boolean;
+  ocrFailedExists?: boolean;
 };
 
 export const StatusIcon = ({ progress, isError, ocrFailedExists }: Props) => {
@@ -34,8 +34,11 @@ const SuccessIcon = () => {
 
 const ErrorIcon = () => {
   return (
-    <div className="flex items-center justify-center w-5 h-5 font-extrabold bg-red-500 rounded-full p-1">
-      <FaExclamation className="text-white" />
+    <div className="relative">
+      <div className="flex items-center justify-center size-5 font-extrabold bg-red-500 rounded-full p-1">
+        <FaExclamation className="text-white z-10" />
+        <div className="size-4 bg-red-500 rounded-full p-1 absolute animate-ping" />
+      </div>
     </div>
   );
 };
@@ -49,7 +52,7 @@ export const IndexIconWithAction = ({
   isHover: boolean;
   onClick: () => void;
   index: number;
-  ocrFailedExists: boolean;
+  ocrFailedExists?: boolean;
 }) => {
   if (ocrFailedExists) return null;
   return (

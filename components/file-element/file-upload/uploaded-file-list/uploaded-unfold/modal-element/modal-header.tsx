@@ -3,7 +3,7 @@ import UploadedFileListHeader from '../uploaded-file-list-header/uploaded-file-l
 import { useMemo } from 'react';
 
 type Props = {
-  sortProgress: {
+  sortProgress?: {
     progress: number;
     isSort: boolean;
   };
@@ -23,7 +23,7 @@ export default function ModalHeader({ sortProgress, ocrFailedExists, files }: Pr
 
   if (ocrFailedExists) {
     return (
-      <section className="bg-white flex flex-col items-start gap-3 mb-3 select-none">
+      <section className="flex flex-col items-start gap-3 mb-3 select-none ">
         <div className="text-indigo-700 font-bold flex items-center gap-3">
           <p className="text-lg">자동 분류 실패</p>
           <div className="bg-indigo-700 w-5 h-5 text-sm rounded-full flex justify-center items-center p-2 text-white">

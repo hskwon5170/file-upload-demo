@@ -14,7 +14,7 @@ type Props = {
   file: FileWithProgress;
   isDropTarget?: boolean;
   index?: number;
-  ocrFailedExists: boolean;
+  ocrFailedExists?: boolean;
 };
 
 export default function FileCards({ file, isDropTarget, index, ocrFailedExists }: Props) {
@@ -23,8 +23,8 @@ export default function FileCards({ file, isDropTarget, index, ocrFailedExists }
   // const fileExtension = file.file?.type.split('/')[1];
 
   const openSprings = useSpring({
-    from: { opacity: 0.05, scale: 0.9, y: -30 },
-    to: { opacity: 1, scale: 1, y: 0 },
+    from: { opacity: 0.05, scale: 0.9, y: -30, rotate: -5 },
+    to: { opacity: 1, scale: 1, y: 0, rotate: 0 },
     config: { duration: 100, velocity: 10 },
     delay: 150,
   });
@@ -97,14 +97,18 @@ export default function FileCards({ file, isDropTarget, index, ocrFailedExists }
             <div className="flex items-center justify-between">
               <div className="flex flex-col p-3 gap-2">
                 <div className="flex items-center gap-3">
-                  <div className="font-semibold text-xs truncate max-w-60">{file?.file.name}</div>
+                  <div
+                    className={`font-semibold text-xs truncate ${ocrFailedExists ? 'max-w-44' : 'max-w-60'}`}
+                  >
+                    {file?.file.name}
+                  </div>
                 </div>
                 <div className="text-[10px] text-gray-500">{ConvertSize(file?.file.size)}</div>
               </div>
             </div>
           </div>
         </div>
-        {ocrFailedExists && <p className="text-sm">파일명 인식 불가</p>}
+        {ocrFailedExists && <p className="text-sm w-28">파일명 인식 불가</p>}
         <StatusIcon
           progress={file?.progress ?? 0}
           isError={file?.isError ?? false}

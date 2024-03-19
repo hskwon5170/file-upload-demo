@@ -1,6 +1,7 @@
 import { useSetAtom } from 'jotai';
 import Button from '../../buttons/buttons';
 import { closeAtom } from '@/atom/files';
+import { FileWithProgress } from '@/types/files';
 
 type Props = {
   isLoading: boolean;

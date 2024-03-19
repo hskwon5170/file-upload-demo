@@ -12,7 +12,7 @@ type Props = {
 
 type DragLiElement = React.DragEvent<HTMLLIElement>;
 
-export const useFileOrderChange = ({ ocrFailedExists }: { ocrFailedExists: boolean }) => {
+export const useFileOrderChange = ({ ocrFailedExists }: { ocrFailedExists?: boolean }) => {
   const [files, setFiles] = useAtom(fileAtom);
   const [isBlankSpaceDrag, setIsBlankSpaceDrag] = useAtom(isBlankSpaceDragAtom);
   const setIsOrderChange = useSetAtom(isOrderChangeAtom);

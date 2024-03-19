@@ -21,7 +21,7 @@ const useUpload = () => {
           setFiles((prev) => {
             return prev.map((file) => {
               return file.id === fileWithStatus?.id
-                ? { ...file, progress: percentCompleted, isOcrFailed: true }
+                ? { ...file, progress: percentCompleted, isOcrFailed: false }
                 : file;
             });
           });
@@ -39,7 +39,7 @@ const useUpload = () => {
       setFiles((prev) => {
         return prev.map((file) => {
           return file.id === fileWithStatus?.id
-            ? { ...file, status: 'error', progress: 0, isError: true }
+            ? { ...file, status: 'error', progress: 0, isError: true, isOcrFailed: true }
             : file;
         });
       });

@@ -10,14 +10,16 @@ import { MdClose } from 'react-icons/md';
 import { VscChromeMinimize } from 'react-icons/vsc';
 
 type Props = {
-  sortProgress: {
+  sortProgress?: {
     progress: number;
     isSort: boolean;
   };
 };
 
 export default function UploadedFileListHeader({ sortProgress }: Props) {
-  const { progress, isSort } = sortProgress;
+  //  const { progress, isSort } = sortProgress;
+  const progress = sortProgress ? sortProgress.progress : 0;
+  const isSort = sortProgress ? sortProgress.isSort : false;
   const files = useAtomValue(fileAtom);
 
   const uploadedFiles = useMemo(() => {

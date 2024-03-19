@@ -4,7 +4,7 @@ import type { FileWithProgress } from '@/types/files';
 
 type Props = {
   files: FileWithProgress[];
-  ocrFailedExists: boolean;
+  ocrFailedExists?: boolean;
 };
 
 export default function FileCardList({ files, ocrFailedExists }: Props) {

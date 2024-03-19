@@ -45,6 +45,7 @@ export default function RootLayout({
 
           {modal}
           <div>{filelist}</div>
+
           <div className="fixed top-0 right-2">{previewimage}</div>
         </body>
       </Provider>
